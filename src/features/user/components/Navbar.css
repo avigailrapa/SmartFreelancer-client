@@ -1,0 +1,89 @@
+body {
+  margin: 0;
+  padding-top: 80px;
+}
+
+.navbar {
+  width: 100%;
+  height: 80px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e4e5e7;
+  display: flex;
+  align-items: center;
+  position: fixed; 
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+.navbar-container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #62646a;
+  transition: color 0.2s;
+}
+
+.logo {
+  font-size: 28px;
+  color: #404145 !important; 
+  font-weight: 700;
+}
+
+.logo-dot {
+  color: #1dbf73; 
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  margin-right: 40px; 
+  font-weight: 600;
+  color: #62646a;
+}
+
+.join-btn {
+  margin-left: 10px; 
+  color: #1dbf73 !important;
+  border: 1px solid #1dbf73;
+  padding: 10px 24px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+.nav-link:hover {
+  color: #1dbf73;
+}
+
+
+.join-btn:hover {
+  background-color: #1dbf73;
+  color: white !important;
+}
+
+.user-section {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid #95979d;
+  color: #74767e;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
