@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLoginMutation } from "../redux/api";
+import { useLoginMutation } from "../../features/user/redux/api";
 import { useNavigate, Link } from "react-router-dom";
 
 export const LoginPage = () => {

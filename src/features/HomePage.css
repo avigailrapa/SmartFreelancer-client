@@ -1,0 +1,247 @@
+:root {
+  --f-green: #1dbf73;
+  --f-dark: #222325;
+  --f-grey-bg: #f7f7f7;
+  --f-border: #e4e5e7;
+}
+
+/* כללי - מונע שוליים לבנים בצדדים */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.home-wrapper {
+  width: 100%;
+}
+
+/* --- Hero Section - רחב ומרשים --- */
+.fiverr-hero-dark {
+  width: 100vw;
+  height: 480px;
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
+    url("https://fiverr-res.cloudinary.com/image/upload/q_auto,f_auto/v1/attachments/generic_asset/asset/bb59582203e4a385d8528efd44958f00-1596033486375/guide-622-5xx.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+}
+
+.hero-content-wrapper {
+  width: 90%;
+  max-width: 1400px;
+}
+
+.hero-main-title {
+  color: white;
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  max-width: 600px;
+  line-height: 1.2;
+}
+
+/* --- Search Bar - נקי כמו ב-Fiverr --- */
+.search-wrapper-relative {
+  position: relative;
+  max-width: 650px;
+}
+
+.fiverr-search-bar {
+  display: flex;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.fiverr-search-bar input {
+  flex: 1;
+  border: none;
+  padding: 16px 20px;
+  font-size: 16px;
+  outline: none;
+}
+
+.search-submit-btn {
+  background: #222325;
+  color: white;
+  border: none;
+  padding: 0 25px;
+  cursor: pointer;
+  font-size: 20px;
+  transition: 0.2s;
+}
+
+.search-submit-btn:hover {
+  background: black;
+}
+
+/* --- Popular Pills - מסודר ב-2 שורות --- */
+.hero-popular-categories {
+  margin-top: 25px;
+  display: flex;
+  flex-wrap: wrap; /* מאפשר ירידת שורה */
+  align-items: center;
+  gap: 12px;
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  max-width: 800px; /* הגבלה שגורמת להם להתחלק ל-2 שורות */
+}
+
+/* מוודא שהכותרת "Popular" לא תישבר ותישאר בשורה הראשונה */
+.hero-popular-categories span {
+  white-space: nowrap;
+}
+
+.fiverr-pill {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 6px 14px; /* הגדלתי מעט את הריווח שייראה טוב יותר */
+  border-radius: 40px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.3s;
+  white-space: nowrap; /* מונע מהטקסט בתוך הכפתור להישבר */
+}
+
+.fiverr-pill:hover, .fiverr-pill.active {
+  background: white;
+  color: black;
+}
+
+/* --- Results Grid - פריסה רחבה ומקצועית --- */
+.results-container {
+  padding: 60px 5%;
+  background: white;
+}
+
+.container-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.results-heading {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: var(--f-dark);
+}
+
+.fiverr-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.fiverr-card {
+  border: 1px solid var(--f-border);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+}
+
+.fiverr-card:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-image-placeholder {
+  height: 180px;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: #ccc;
+}
+
+.card-info {
+  padding: 15px;
+}
+
+.seller-name {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.tag {
+  background: #f5f5f5;
+  color: #62646a;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  margin-right: 5px;
+}
+
+.card-footer {
+  border-top: 1px solid var(--f-border);
+  padding: 10px 15px;
+  display: flex;
+  justify-content: flex-end;
+  background: white;
+}
+
+.price-label {
+  font-size: 10px;
+  color: #74767e;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.price-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #404145;
+}
+/* תיקון רשימת ההצעות - מראה Fiverr אמיתי */
+.fiverr-autocomplete-list {
+  position: absolute;
+  top: 100%; /* נצמד בדיוק מתחת לתיבת החיפוש */
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 0 0 8px 8px; /* עיגול פינות רק למטה */
+  box-shadow: 0 12px 18px rgba(0, 0, 0, 0.15); /* צל עמוק ומקצועי */
+  list-style: none; /* ביטול הנקודות (Bullets) */
+  margin: 0;
+  padding: 0;
+  z-index: 1000;
+  overflow: hidden;
+  border: 1px solid #e4e5e7;
+  border-top: none;
+}
+
+.fiverr-autocomplete-list li {
+  padding: 12px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background 0.2s;
+  color: #404145; /* צבע טקסט של פייבר */
+  font-size: 15px;
+  text-align: left;
+}
+
+.fiverr-autocomplete-list li:hover {
+  background-color: #f7f7f7; /* אפור בהיר במעבר עכבר */
+}
+
+.suggestion-text strong {
+  color: #222325;
+  font-weight: 700;
+}
+
+/* ביטול השוליים המובנים של ה-UL */
+.search-wrapper-relative ul {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-inline-start: 0;
+}

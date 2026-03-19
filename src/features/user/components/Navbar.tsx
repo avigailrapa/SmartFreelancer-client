@@ -24,6 +24,10 @@ export const NavBar = () => {
             SkillBridge
             <span className="logo-dot">.</span>
           </Link>
+
+          <Link to="/jobs" className="nav-link browse-link">
+            Browse Jobs
+          </Link>
         </div>
 
         <div className="navbar-right">

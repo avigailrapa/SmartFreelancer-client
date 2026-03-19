@@ -10,11 +10,11 @@ body {
   border-bottom: 1px solid #e4e5e7;
   display: flex;
   align-items: center;
-  position: fixed; 
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
-  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .navbar-container {
@@ -35,12 +35,12 @@ body {
 
 .logo {
   font-size: 28px;
-  color: #404145 !important; 
+  color: #404145 !important;
   font-weight: 700;
 }
 
 .logo-dot {
-  color: #1dbf73; 
+  color: #1dbf73;
 }
 
 .navbar-right {
@@ -49,13 +49,13 @@ body {
 }
 
 .nav-link {
-  margin-right: 40px; 
+  margin-right: 40px;
   font-weight: 600;
   color: #62646a;
 }
 
 .join-btn {
-  margin-left: 10px; 
+  margin-left: 10px;
   color: #1dbf73 !important;
   border: 1px solid #1dbf73;
   padding: 10px 24px;
@@ -65,7 +65,6 @@ body {
 .nav-link:hover {
   color: #1dbf73;
 }
-
 
 .join-btn:hover {
   background-color: #1dbf73;
@@ -86,4 +85,14 @@ body {
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
+}
+.browse-link {
+  margin-left: 25px;
+  font-weight: 500;
+  color: #62646a; /* צבע אפור נייטרלי כמו ב-Fiverr */
+  text-decoration: none;
+}
+
+.browse-link:hover {
+  color: #1dbf73; /* ירוק במעבר עכבר */
 }

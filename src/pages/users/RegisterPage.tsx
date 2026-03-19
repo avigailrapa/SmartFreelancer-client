@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRegisterMutation } from "../redux/api";
+import { useRegisterMutation } from "../../features/user/redux/api";
 import { useNavigate, Link } from "react-router-dom";
 
 export const RegisterPage = () => {
