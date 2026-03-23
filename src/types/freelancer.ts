@@ -9,7 +9,7 @@ export interface Freelancer {
   hourlyRate: number
   averageStars: number
 
-  experienceLevel: number
+  experienceLevel: string
   status: number
 
   specializationIds?: number[]

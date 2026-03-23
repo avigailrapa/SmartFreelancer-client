@@ -1,0 +1,39 @@
+.auth-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* החשכה של מה שמאחורה */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999; /* גבוה מאוד כדי לעלות על הכל */
+}
+
+.auth-modal-center {
+  background: white;
+  padding: 40px;
+  border-radius: 8px;
+  position: relative; /* מאפשר ל-X להיות ממוקם לפי הריבוע הלבן */
+  width: 400px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #74767e;
+}
+
+.fiverr-input {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}

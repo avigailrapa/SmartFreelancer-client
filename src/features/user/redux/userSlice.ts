@@ -6,6 +6,7 @@ interface UserState {
   user: User | null;
   token: string | null;
   isAuthenticated: boolean;
+  isSellingMode: boolean;
 }
 
 const getStoredUser = (): User | null => {
@@ -22,6 +23,7 @@ const initialState: UserState = {
   user: getStoredUser(),
   token: localStorage.getItem("token"),
   isAuthenticated: !!localStorage.getItem("token"),
+  isSellingMode: localStorage.getItem("isSellingMode") === "true",
 };
 
 const userSlice = createSlice({
@@ -34,20 +36,28 @@ const userSlice = createSlice({
       state.user = user;
       state.token = token;
       state.isAuthenticated = true;
+      state.isSellingMode = !!user.freelancerId;
 
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("isSellingMode", state.isSellingMode.toString());
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+      state.isSellingMode = false;
 
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("isSellingMode");
+    },
+    toggleMode: (state) => {
+      state.isSellingMode = !state.isSellingMode;
+      localStorage.setItem("isSellingMode", state.isSellingMode.toString());
     },
   },
 });
 
-export const { login, logout } = userSlice.actions;
+export const { login, logout, toggleMode } = userSlice.actions;
 export default userSlice.reducer;

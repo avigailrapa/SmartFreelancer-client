@@ -1,20 +1,21 @@
+/* מוודא שהגוף לא דוחף את הנאבבר בצורה מוזרה */
 body {
   margin: 0;
-  padding-top: 80px;
+  padding-top: 80px; /* משאיר מקום לנאבבר הקבוע */
 }
 
 .navbar {
   width: 100%;
   height: 80px;
-  background-color: #ffffff;
+  background-color: #ffffff !important; /* רקע לבן מוצק */
   border-bottom: 1px solid #e4e5e7;
   display: flex;
   align-items: center;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1000;
-  font-family: "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  z-index: 2000; /* ערך גבוה מאוד כדי שלא יסתתר */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* צל עדין להפרדה */
 }
 
 .navbar-container {
@@ -27,72 +28,149 @@ body {
   align-items: center;
 }
 
-.navbar a {
-  text-decoration: none;
-  color: #62646a;
-  transition: color 0.2s;
-}
-
+/* עיצוב הלוגו - מוודא שהוא שחור ובולט */
 .logo {
+  font-family: "Segoe UI", Helvetica, Arial, sans-serif;
   font-size: 28px;
-  color: #404145 !important;
-  font-weight: 700;
+  color: #404145 !important; /* אפור כמעט שחור */
+  font-weight: 900;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
 }
 
 .logo-dot {
-  color: #1dbf73;
+  color: #1dbf73 !important; /* ירוק פייבר לנקודה */
+  margin-left: 1px;
 }
 
 .navbar-right {
   display: flex;
   align-items: center;
+  gap: 30px; /* ריווח ברור בין הפריטים */
 }
 
+/* עיצוב הקישורים - מוודא שהם אפורים כהים וקריאים */
 .nav-link {
-  margin-right: 40px;
+  text-decoration: none;
+  color: #62646a !important; /* צבע אפור כהה קריא */
   font-weight: 600;
-  color: #62646a;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #1dbf73 !important;
 }
 
 .join-btn {
-  margin-left: 10px;
   color: #1dbf73 !important;
   border: 1px solid #1dbf73;
   padding: 10px 24px;
   border-radius: 4px;
   font-weight: 600;
-}
-.nav-link:hover {
-  color: #1dbf73;
+  background: transparent;
+  text-decoration: none;
+  transition: all 0.3s;
 }
 
 .join-btn:hover {
   background-color: #1dbf73;
   color: white !important;
 }
-
-.user-section {
-  display: flex;
-  align-items: center;
-  gap: 25px;
+/* זה החלק שמתקן את הכחול של הקישורים */
+.navbar a, 
+.navbar .nav-link, 
+.logo {
+  text-decoration: none !important; /* מבטל קו תחתון */
+  color: #404145 !important;       /* צבע אפור כהה במקום כחול */
 }
 
-.logout-btn {
-  background: none;
-  border: 1px solid #95979d;
-  color: #74767e;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
+/* מוודא שגם ה-Browse Jobs וגם ה-Sign In נראים אותו דבר */
+.nav-link {
+  color: #62646a !important; 
   font-weight: 600;
-}
-.browse-link {
-  margin-left: 25px;
-  font-weight: 500;
-  color: #62646a; /* צבע אפור נייטרלי כמו ב-Fiverr */
-  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
 }
 
-.browse-link:hover {
-  color: #1dbf73; /* ירוק במעבר עכבר */
+/* הצבע הירוק של הנקודה - חייב להישאר ירוק */
+.logo-dot {
+  color: #1dbf73 !important;
 }
+
+/* אפקט מעבר עכבר כדי שנדע שזה לחיץ */
+.nav-link:hover {
+  color: #1dbf73 !important;
+}
+.nav-profile-section {
+    display: flex;
+    align-items: center;
+}
+
+.profile-dropdown-container {
+    position: relative; /* חשוב מאוד כדי שהתפריט יצוף מתחתיו */
+    padding: 5px;
+}
+
+.profile-avatar-circle {
+    width: 36px;
+    height: 36px;
+    background-color: #1dbf73; /* ירוק מקצועי או כחול */
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-dropdown-menu {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: white;
+    border: 1px solid #e4e5e7;
+    border-radius: 4px;
+    width: 180px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    
+    /* מוסתר כברירת מחדל */
+    display: none; 
+    z-index: 1000;
+}
+
+/* הצגת התפריט במעבר עכבר על המיכל */
+.profile-dropdown-container:hover .profile-dropdown-menu {
+    display: block;
+}
+
+.dropdown-header {
+    padding: 10px 15px;
+    border-bottom: 1px solid #efeff0;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-name { font-weight: bold; font-size: 14px; }
+.dropdown-type { font-size: 12px; color: #74767e; }
+
+.dropdown-item {
+    display: block;
+    padding: 10px 15px;
+    color: #404145;
+    text-decoration: none;
+    font-size: 14px;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+}
+
+.dropdown-item:hover { background-color: #f7f7f7; }
+
+.logout-link { color: #f44336; border-top: 1px solid #efeff0; }
