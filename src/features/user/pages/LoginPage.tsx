@@ -9,21 +9,24 @@ interface LoginPageProps {
 
 export const LoginPage = ({ onClose }: LoginPageProps) => {
   const [loginUser, { isLoading }] = useLoginMutation();
-  const [form, setForm] = useState({ userName: "", password: "" });
+  const [form, setForm] = useState({ email: "", password: "" });
 
   const handleClose = () => {
-    setForm({ userName: "", password: "" });
+    setForm({ email: "", password: "" });
     onClose();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const result = await loginUser(form).unwrap();
+      const result = await loginUser({
+        Email: form.email,
+        Password: form.password,
+      }).unwrap();
       if (result.token) {
         localStorage.setItem("token", result.token);
       }
-      setForm({ userName: "", password: "" });
+      setForm({ email: "", password: "" });
       handleClose();
     } catch (err) {
       console.error("Login failed:", err);
@@ -42,14 +45,14 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
         {/* הוסיפי autoComplete="off" כדי שהדפדפן לא ימלא לבד */}
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="input-group">
-            <label>Email or username</label>
+            <label>Email</label>
             <input
-              type="text"
+              type="email"
               className="fiverr-input"
-              name="userName"
+              name="email"
               autoComplete="new-password"
-              value={form.userName} // 3. הוספת value לסנכרון
-              onChange={(e) => setForm({ ...form, userName: e.target.value })}
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
             />
           </div>

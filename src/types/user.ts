@@ -3,4 +3,5 @@ export interface User {
   fullName: string;
   email: string;
   freelancerId: number | null;
+  passward: string | null;
 }

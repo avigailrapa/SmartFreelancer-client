@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useGetAllFreelancersQuery } from "../redux/api";
 import "../../HomePage.css";
@@ -19,13 +19,33 @@ export const FreelancersPage = () => {
   const { data: freelancers, isLoading } = useGetAllFreelancersQuery();
 
   const [searchTerm, setSearchTerm] = useState(initialSearch);
-  const [maxPrice, setMaxPrice] = useState<number>(1500);
+  const [priceRange, setPriceRange] = useState<[number, number]>([20, 1500]);
   const [selectedLevel, setSelectedLevel] = useState<string>("All");
+
   const [isBudgetOpen, setIsBudgetOpen] = useState(false);
+  const [isExperienceOpen, setIsExperienceOpen] = useState(false);
+
+  const budgetRef = useRef<HTMLDivElement>(null);
+  const expRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setSearchTerm(initialSearch);
   }, [initialSearch]);
+
+  // סגירה בלחיצה מחוץ
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (budgetRef.current && !budgetRef.current.contains(e.target as Node)) {
+        setIsBudgetOpen(false);
+      }
+      if (expRef.current && !expRef.current.contains(e.target as Node)) {
+        setIsExperienceOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const filteredFreelancers = useMemo(() => {
     if (!freelancers) return [];
@@ -38,17 +58,20 @@ export const FreelancersPage = () => {
         f.userName?.toLowerCase().includes(term) ||
         f.mainCategoryName?.toLowerCase().includes(term) ||
         f.specializationNames?.some((s: string) =>
-          s.toLowerCase().includes(term),
+          s.toLowerCase().includes(term)
         ) ||
         f.skillNames?.some((s: string) => s.toLowerCase().includes(term));
 
-      const matchesPrice = (f.hourlyRate || 0) <= maxPrice;
+      const matchesPrice =
+        (f.hourlyRate || 0) >= priceRange[0] &&
+        (f.hourlyRate || 0) <= priceRange[1];
+
       const matchesLevel =
         selectedLevel === "All" || f.experienceLevel === selectedLevel;
 
       return matchesSearch && matchesPrice && matchesLevel;
     });
-  }, [freelancers, searchTerm, maxPrice, selectedLevel]);
+  }, [freelancers, searchTerm, priceRange, selectedLevel]);
 
   if (isLoading) return <div className="loading">Loading...</div>;
 
@@ -56,109 +79,164 @@ export const FreelancersPage = () => {
     <div className="browse-wrapper">
       <section className="filters-top-bar">
         <div className="filter-group">
-          <div className="filter-item-wrapper">
-            <button className="filter-btn">
+
+          {/* EXPERIENCE */}
+          <div className="filter-item-wrapper" ref={expRef}>
+            <button
+              className={`filter-btn ${isExperienceOpen ? "active" : ""}`}
+              onClick={() => setIsExperienceOpen((prev) => !prev)}
+            >
               {selectedLevel === "All"
                 ? "Experience"
                 : experienceLabels[selectedLevel]}{" "}
               ▾
             </button>
-            <select
-              className="hidden-select"
-              value={selectedLevel}
-              onChange={(e) => setSelectedLevel(e.target.value)}
-            >
-              <option value="All">All Levels</option>
-              <option value="Junior">Junior</option>{" "}
-              <option value="MidLevel">Mid-Level</option>{" "}
-              <option value="Senior">Senior</option>{" "}
-              <option value="Expert">Expert</option>{" "}
-            </select>
+
+            {isExperienceOpen && (
+              <div className="dropdown-menu">
+                {["All", "Junior", "MidLevel", "Senior", "Expert"].map(
+                  (level) => (
+                    <div
+                      key={level}
+                      className={`dropdown-item ${
+                        selectedLevel === level ? "selected" : ""
+                      }`}
+                      onClick={() => {
+                        setSelectedLevel(level);
+                        setIsExperienceOpen(false);
+                      }}
+                    >
+                      {level === "All" ? "All Levels" : experienceLabels[level]}
+                    </div>
+                  )
+                )}
+              </div>
+            )}
           </div>
 
-          <div className="filter-item-wrapper">
+          {/* BUDGET */}
+          <div className="filter-item-wrapper" ref={budgetRef}>
             <button
               className={`filter-btn ${isBudgetOpen ? "active" : ""}`}
-              onClick={() => setIsBudgetOpen(!isBudgetOpen)}
+              onClick={() => setIsBudgetOpen((prev) => !prev)}
             >
-              Budget (${maxPrice}) ▾
+              Budget (${priceRange[0]}–${priceRange[1]}) ▾
             </button>
 
             {isBudgetOpen && (
               <div className="budget-popover">
                 <div className="popover-header">
-                  <span>
-                    Max Price: <strong>${maxPrice}</strong>
-                  </span>
+                  Price:{" "}
+                  <strong>
+                    ${priceRange[0]} – ${priceRange[1]}
+                  </strong>
                 </div>
-                <input
-                  type="range"
-                  min="20"
-                  max="1500"
-                  step="10"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(Number(e.target.value))}
-                  className="budget-slider"
-                />
-                <div className="popover-footer">
-                  <button
-                    className="apply-btn"
-                    onClick={() => setIsBudgetOpen(false)}
-                  >
-                    Apply
-                  </button>
+
+                <div className="range-track">
+                  {/* Thumb תחתון - min */}
+                  <input
+                    type="range"
+                    min="20"
+                    max="1500"
+                    step="10"
+                    value={priceRange[0]}
+                    onChange={(e) => {
+                      const val = Math.min(
+                        Number(e.target.value),
+                        priceRange[1] - 10
+                      );
+                      setPriceRange([val, priceRange[1]]);
+                    }}
+                    className="range-input range-lower"
+                  />
+                  {/* Thumb עליון - max */}
+                  <input
+                    type="range"
+                    min="20"
+                    max="1500"
+                    step="10"
+                    value={priceRange[1]}
+                    onChange={(e) => {
+                      const val = Math.max(
+                        Number(e.target.value),
+                        priceRange[0] + 10
+                      );
+                      setPriceRange([priceRange[0], val]);
+                    }}
+                    className="range-input range-upper"
+                  />
+
+                  {/* פס צבוע בין שני הthumb-ים */}
+                  <div
+                    className="range-fill"
+                    style={{
+                      left: `${((priceRange[0] - 20) / (1500 - 20)) * 100}%`,
+                      right: `${
+                        100 - ((priceRange[1] - 20) / (1500 - 20)) * 100
+                      }%`,
+                    }}
+                  />
                 </div>
+
+                <button
+                  className="apply-btn"
+                  onClick={() => setIsBudgetOpen(false)}
+                >
+                  Apply
+                </button>
               </div>
             )}
           </div>
+
+          {/* CLEAR */}
+          <button
+            className="clear-btn"
+            onClick={() => {
+              setPriceRange([20, 1500]);
+              setSelectedLevel("All");
+            }}
+          >
+            Clear Filters
+          </button>
         </div>
 
-        <div className="results-count">
-          {filteredFreelancers.length}+ results
-        </div>
+        <div className="results-count">{filteredFreelancers.length} results</div>
       </section>
+
       <main className="results-area">
         <div className="fiverr-grid">
           {filteredFreelancers.map((f) => (
             <div key={f.freelancerId} className="fiverr-card">
               <div className="card-image-container">
                 <div className="card-image-placeholder">
-                  <span className="user-initial">{f.userName?.[0]}</span>
+                  <span>{f.userName?.[0]}</span>
                 </div>
               </div>
 
               <div className="card-content">
                 <div className="seller-info-row">
                   <div className="seller-avatar-mini">{f.userName?.[0]}</div>
-                  <div className="seller-text-details">
-                    <span className="seller-name">{f.userName}</span>
-                    <span className="experience-badge">
+                  <div>
+                    <div className="seller-name">{f.userName}</div>
+                    <div className="experience-badge">
                       {experienceLabels[f.experienceLevel]}
-                    </span>
+                    </div>
                   </div>
                 </div>
 
                 <p className="card-title">
-                  I will provide professional {f.mainCategoryName || "services"}{" "}
-                  for your business
+                  I will provide professional{" "}
+                  {f.mainCategoryName || "services"}
                 </p>
 
                 <div className="card-rating">
-                  <span className="star-icon">★</span>
-                  <span className="rating-num">
-                    {f.averageStars?.toFixed(1) || "5.0"}
-                  </span>
-                  <span className="reviews-count">
-                    ({Math.floor(Math.random() * 100) + 1})
-                  </span>
+                  ★ {f.averageStars?.toFixed(1) || "5.0"}
                 </div>
               </div>
 
               <div className="card-footer">
-                <div className="price-section">
-                  <span className="starting-at">STARTING AT</span>
-                  <span className="actual-price">${f.hourlyRate}</span>
-                </div>
+                <span>From</span>
+                <strong>${f.hourlyRate}</strong>
               </div>
             </div>
           ))}

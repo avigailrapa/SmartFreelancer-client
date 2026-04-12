@@ -15,9 +15,39 @@ export const HomePage = () => {
   const searchRef = useRef<HTMLDivElement>(null);
 
   const handleSearchNavigation = (term: string) => {
-    const finalTerm = term.trim() || searchTerm.trim();
-    navigate(`/freelancers?search=${encodeURIComponent(finalTerm)}`);
+    const finalTerm = term.trim();
+    if (finalTerm) {
+      navigate(`/freelancers?search=${encodeURIComponent(finalTerm)}`);
+      setShowSuggestions(false);
+    }
   };
+
+  const allSuggestions = useMemo(() => {
+    if (!searchTerm.trim()) return [];
+    const term = searchTerm.toLowerCase().trim();
+    const suggestionsSet = new Set<string>();
+
+    if (categories) {
+      categories.forEach((cat) => {
+        if (cat.name?.toLowerCase().includes(term)) {
+          suggestionsSet.add(cat.name);
+        }
+      });
+    }
+
+    if (freelancers) {
+      freelancers.forEach((f) => {
+        f.specializationNames?.forEach((s: string) => {
+          if (s.toLowerCase().includes(term)) suggestionsSet.add(s);
+        });
+        f.skillNames?.forEach((s: string) => {
+          if (s.toLowerCase().includes(term)) suggestionsSet.add(s);
+        });
+      });
+    }
+
+    return Array.from(suggestionsSet).slice(0, 8);
+  }, [searchTerm, categories, freelancers]);
 
   const topFreelancers = useMemo(() => {
     if (!freelancers) return [];
@@ -44,45 +74,64 @@ export const HomePage = () => {
       <section className="fiverr-hero-dark">
         <div className="hero-content-wrapper">
           <h1 className="hero-main-title">
-            Our freelancers <br /> will take it from here
+            Our professionals <br /> will take it from here
           </h1>
 
-          <div className="search-wrapper-relative" ref={searchRef}>
-            <div className="fiverr-search-bar">
-              <input
-                type="text"
-                placeholder="Search for any service..."
-                value={searchTerm}
-                onKeyDown={(e) =>
-                  e.key === "Enter" && handleSearchNavigation(searchTerm)
-                }
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setShowSuggestions(true);
-                }}
-                onFocus={() => setShowSuggestions(true)}
-              />
-              <button
-                className="search-submit-btn"
-                onClick={() => handleSearchNavigation(searchTerm)}
-              >
-                <SearchIcon sx={{ fontSize: 24 }} />
-              </button>
-            </div>
-          </div>
-
-          <div className="hero-popular-categories">
-            {categories
-              ?.filter((c) => !c.parentCategoryId)
-              .map((cat) => (
+          <div className="search-and-popular-container">
+            <div className="search-wrapper-relative" ref={searchRef}>
+              <div className="fiverr-search-bar">
+                <input
+                  type="text"
+                  placeholder="What service are you looking for?"
+                  value={searchTerm}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && handleSearchNavigation(searchTerm)
+                  }
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                />
                 <button
-                  key={cat.categoryId}
-                  className="fiverr-pill"
-                  onClick={() => handleSearchNavigation(cat.name || "")}
+                  className="search-submit-btn"
+                  onClick={() => handleSearchNavigation(searchTerm)}
                 >
-                  {cat.name}
+                  <SearchIcon sx={{ fontSize: 24 }} />
                 </button>
-              ))}
+              </div>
+
+              {/* רשימת הצעות נקייה */}
+              {showSuggestions && allSuggestions.length > 0 && (
+                <div className="home-search-suggestions">
+                  {allSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      className="suggestion-row-fiverr"
+                      onClick={() => handleSearchNavigation(suggestion)}
+                    >
+                      <span className="suggest-text-main">{suggestion}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="hero-popular-categories">
+              <span className="popular-label">Popular:</span>
+              {categories
+                ?.filter((c) => !c.parentCategoryId)
+                .slice(0, 4)
+                .map((cat) => (
+                  <button
+                    key={cat.categoryId}
+                    className="fiverr-pill"
+                    onClick={() => handleSearchNavigation(cat.name || "")}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+            </div>
           </div>
         </div>
       </section>
@@ -101,16 +150,16 @@ export const HomePage = () => {
                 <div className="card-info">
                   <div className="seller-name">{f.userName}</div>
                   <div className="skills-tags-row">
-                    {f.skillNames?.slice(0, 2).map((s) => (
+                    {f.skillNames?.slice(0, 2).map((s: string) => (
                       <span key={s} className="tag">
                         {s}
                       </span>
                     ))}
                   </div>
                   <div className="card-footer">
-                    <span className="price">From ${f.hourlyRate}</span>
+                    <span className="price-value">From ${f.hourlyRate}</span>
                     <span className="rating">
-                      ⭐ {f.averageStars?.toFixed(1)}
+                      ⭐ {f.averageStars?.toFixed(1) || "5.0"}
                     </span>
                   </div>
                 </div>

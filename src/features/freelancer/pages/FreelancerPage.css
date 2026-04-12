@@ -1,186 +1,344 @@
-/* עטיפה כללית */
-.browse-wrapper {
-  padding: 20px 5%;
-  background-color: #fff;
-  min-height: 100vh;
+:root {
+  --header-height: 70px;
+  --green: #1dbf73;
 }
 
-/* בר הפילטרים העליון */
+html,
+body {
+  overflow-x: hidden;
+}
+
+.browse-wrapper {
+  background: #f7f7f7;
+  min-height: 100vh;
+  overflow: visible;
+}
+
 .filters-top-bar {
+  position: sticky;
+  top: var(--header-height);
+  z-index: 100;
+  background: #f7f7f7;
+  padding: 12px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
   border-bottom: 1px solid #e4e5e7;
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 100; /* חשוב כדי שהפופאובר יהיה מעל הגריד */
-  overflow: visible !important; /* קריטי למניעת חיתוך */
 }
 
 .filter-group {
   display: flex;
-  gap: 15px;
+  gap: 10px;
+  align-items: center;
 }
 
-/* העוגן של הפילטרים */
+/* ─── FILTER ITEM WRAPPER ─── */
 .filter-item-wrapper {
   position: relative;
-  display: inline-block;
 }
 
-/* כפתור הפילטר */
+/* ─── FILTER BUTTON ─── */
 .filter-btn {
-  padding: 8px 16px;
-  border: 1px solid #b5b6ba;
+  padding: 10px 16px;
+  border: 1px solid #dadbdd;
+  border-radius: 8px;
   background: white;
-  border-radius: 4px;
-  font-weight: 600;
-  color: #404145;
   cursor: pointer;
-  transition: all 0.2s;
+  font-size: 14px;
+  transition: border-color 0.2s;
+  white-space: nowrap;
 }
 
-.filter-btn:hover,
+.filter-btn:hover {
+  border-color: #aaa;
+}
+
 .filter-btn.active {
-  border-color: #1dbf73;
-  color: #1dbf73;
+  border-color: var(--green);
+  color: var(--green);
 }
 
-/* הפופאובר של התקציב - הטריק של השכבות */
+/* ─── EXPERIENCE DROPDOWN ─── */
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 180px;
+  background: white;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  z-index: 200;
+  overflow: hidden;
+}
+
+.dropdown-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.dropdown-item:hover {
+  background: #f5f5f5;
+}
+
+.dropdown-item.selected {
+  background: #e7f7ef;
+  color: var(--green);
+  font-weight: 500;
+}
+
+/* ─── BUDGET POPOVER ─── */
 .budget-popover {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 6px);
   left: 0;
-  width: 300px;
+  width: 260px;
   background: white;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   border: 1px solid #e4e5e7;
-  border-radius: 8px;
-  padding: 25px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-  z-index: 9999; /* מעל הכל */
+  z-index: 200;
 }
 
-/* עיצוב הסליידר */
-.budget-slider {
-  -webkit-appearance: none;
+.popover-header {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 14px;
+}
+
+/* ─── DUAL RANGE SLIDER ─── */
+.range-track {
+  position: relative;
+  height: 36px;
+  margin: 8px 0 14px;
+}
+
+/* פס אפור רקע */
+.range-track::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #ddd;
+  border-radius: 2px;
+  transform: translateY(-50%);
+}
+
+/* פס ירוק בין שני thumb-ים */
+.range-fill {
+  position: absolute;
+  top: 50%;
+  height: 4px;
+  background: var(--green);
+  border-radius: 2px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.range-input {
+  position: absolute;
   width: 100%;
-  height: 6px;
-  background: #e4e5e7;
-  border-radius: 5px;
-  outline: none;
-  margin: 20px 0;
-  cursor: pointer;
-}
-
-.budget-slider::-webkit-slider-thumb {
+  height: 4px;
+  background: transparent;
+  pointer-events: none;
+  appearance: none;
   -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  background: #1dbf73;
-  border: 2px solid white;
+  top: 50%;
+  transform: translateY(-50%);
+  outline: none;
+}
+
+.range-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  background: white;
+  border: 2px solid var(--green);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  pointer-events: all;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+
+.range-input::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.range-input::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--green);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+  pointer-events: all;
   cursor: pointer;
 }
 
-/* גריד הכרטיסים */
+/* ─── APPLY BUTTON ─── */
+.apply-btn {
+  width: 100%;
+  padding: 9px;
+  background: var(--green);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+
+.apply-btn:hover {
+  background: #17a863;
+}
+
+/* ─── CLEAR BUTTON ─── */
+.clear-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  font-size: 14px;
+  padding: 10px 8px;
+  transition: color 0.2s;
+}
+
+.clear-btn:hover {
+  color: #111;
+}
+
+/* ─── RESULTS COUNT ─── */
+.results-count {
+  font-size: 13px;
+  color: #777;
+}
+
+/* ─── GRID ─── */
+.results-area {
+  padding: 0;
+}
+
 .fiverr-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
-  position: relative;
-  z-index: 1; /* נמוך יותר מהפילטרים */
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+  padding: 20px;
 }
 
+/* ─── CARD ─── */
 .fiverr-card {
-  background: #fff;
+  background: white;
+  border-radius: 12px;
   border: 1px solid #e4e5e7;
-  border-radius: 8px;
-  overflow: hidden;
+  overflow: visible; /* לא חותך את התוכן */
   transition:
     transform 0.2s,
     box-shadow 0.2s;
 }
 
 .fiverr-card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* תמונת הכרטיס והאותיות */
+/* ─── CARD IMAGE ─── */
 .card-image-container {
-  height: 170px;
-  background-color: #f5f5f5;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden; /* רק הפינות העגולות למעלה נחתכות */
+}
+
+.card-image-placeholder {
+  height: 150px;
+  background: #ddd;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 28px;
+  color: #999;
 }
 
-.user-initial {
-  font-size: 60px;
-  color: #dadbdd;
-  font-weight: bold;
-}
-
-/* תוכן הכרטיס */
+/* ─── CARD CONTENT ─── */
 .card-content {
-  padding: 16px;
+  padding: 12px;
 }
 
 .seller-info-row {
   display: flex;
+  gap: 8px;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
 }
 
 .seller-avatar-mini {
-  width: 26px;
-  height: 26px;
-  background: #74767e;
+  width: 32px;
+  height: 32px;
+  background: var(--green);
   color: white;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.seller-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.experience-badge {
+  font-size: 11px;
+  background: #f0f0f0;
+  color: #555;
+  padding: 2px 7px;
+  border-radius: 6px;
+  margin-top: 3px;
+  display: inline-block;
 }
 
 .card-title {
-  font-size: 16px;
-  color: #404145;
-  height: 44px;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  margin-bottom: 10px;
+  margin: 10px 0 6px;
+  font-size: 13px;
+  color: #333;
+  line-height: 1.4;
 }
 
+.card-rating {
+  font-size: 13px;
+  color: #ffb33e;
+}
+
+/* ─── CARD FOOTER ─── */
 .card-footer {
-  padding: 12px 16px;
-  border-top: 1px solid #efeff0;
+  padding: 10px 12px;
+  border-top: 1px solid #eee;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #777;
 }
 
-.actual-price {
-  font-size: 18px;
-  font-weight: 800;
-  color: #404145;
+.card-footer strong {
+  color: #222;
+  font-size: 16px;
 }
 
-.hidden-select {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0; 
-  cursor: pointer;
-}
-body {
-  overflow: visible;
+/* ─── LOADING ─── */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+  font-size: 16px;
+  color: #777;
 }
