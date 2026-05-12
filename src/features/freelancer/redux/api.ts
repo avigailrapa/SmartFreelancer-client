@@ -46,28 +46,20 @@ export const freelancerApi = createApi({
     // ---------- GET BY ID ----------
     getFreelancerById: builder.query<Freelancer, number>({
       query: (id) => `/${id}`,
-      providesTags: (result, error, id) => [{ type: "Freelancer", id }],
+      providesTags: (_result, _error, id) => [{ type: "Freelancer", id }],
     }),
 
     // ---------- UPDATE ----------
-    updateFreelancer: builder.mutation<void, Partial<Freelancer>>({
-      query: (body) => ({ url: "/", method: "PUT", body }),
-      async onQueryStarted(body, { dispatch, queryFulfilled }) {
-        const id = getFreelancerIdFromToken();
-        if (!id) return;
-
-        const patchResult = dispatch(
-          freelancerApi.util.updateQueryData(
-            "getAllFreelancers",
-            undefined,
-            (draft) => {
-              const item = draft.find((f) => f.freelancerId === id);
-              if (item) Object.assign(item, body);
-            },
-          ),
-        );
-        queryFulfilled.catch(patchResult.undo);
-      },
+    updateFreelancer: builder.mutation<Freelancer, Partial<Freelancer>>({
+      query: (body) => ({
+        url: "/",
+        method: "PUT",
+        body,
+      }),
+      invalidatesTags: (result) => [
+        { type: "Freelancer", id: result?.freelancerId },
+        { type: "Freelancer", id: "LIST" },
+      ],
     }),
 
     // ---------- BECOME FREELANCER----------

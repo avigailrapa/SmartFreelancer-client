@@ -3,5 +3,5 @@ export interface Category {
   name: string;
   parentCategoryId?: number;
   subCategories: Category[];
-  type: number;
+  type: string;
 }

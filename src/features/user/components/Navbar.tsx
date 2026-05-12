@@ -44,6 +44,10 @@ export const NavBar = ({ onLoginClick, onRegisterClick }: NavBarProps) => {
             Browse Jobs
           </Link>
 
+          <Link to="/freelancers" className="nav-link">
+            Find Talent
+          </Link>
+
           {isAuthenticated && !hasFreelancerProfile && (
             <Link to="/become-a-seller" className="nav-link become-seller-link">
               Become a Seller

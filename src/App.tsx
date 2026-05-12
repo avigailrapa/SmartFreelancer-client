@@ -1,14 +1,19 @@
 import { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { NavBar } from "./features/user/components/Navbar";
 import { HomePage } from "./features/HomePage";
 import { LoginPage } from "./features/user/pages/LoginPage";
 import { RegisterPage } from "./features/user/pages/RegisterPage";
 import { JobsPage } from "./features/job/pages/JobsPage";
 import { FreelancersPage } from "./features/freelancer/pages/FreelancerPage";
-import { FreelancerDashboard } from "./features/freelancer/pages/FreelancerDashboard";
-import { ClientDashboard } from "./features/user/pages/ClientDashboard";
+import { FreelancerLayout } from "./features/freelancer/pages/FreelancerLayout";
+import { ProfilePage } from "./features/freelancer/pages/ProfilePage";
+import { OptimizationPage } from "./features/freelancer/pages/OptimizationPage";
+import { ClientJobs } from "./features/user/pages/ClientJobs";
 import "./App.css";
+import { ClientLayout } from "./features/user/pages/ClientLayout";
+import { ClientProfile } from "./features/user/pages/ClientProfile";
+import { BecomeFreelancer } from "./features/freelancer/pages/BecomeFreelancer";
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -33,7 +38,6 @@ function App() {
       />
 
       {isLoginOpen && <LoginPage onClose={() => setIsLoginOpen(false)} />}
-
       {isRegisterOpen && (
         <RegisterPage onClose={() => setIsRegisterOpen(false)} />
       )}
@@ -43,11 +47,19 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/jobs" element={<JobsPage />} />
           <Route path="/freelancers" element={<FreelancersPage />} />
-          <Route
-            path="/freelancer-dashboard"
-            element={<FreelancerDashboard />}
-          />
-          <Route path="/client-dashboard" element={<ClientDashboard />} />
+          <Route path="/become-a-seller" element={<BecomeFreelancer />} />
+
+          <Route path="/freelancer-dashboard" element={<FreelancerLayout />}>
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<ProfilePage />} />
+            <Route path="matching" element={<OptimizationPage />} />
+          </Route>
+
+          <Route path="/client-dashboard" element={<ClientLayout />}>
+            <Route index element={<Navigate to="client-profile" replace />} />
+            <Route path="client-profile" element={<ClientProfile />} />
+            <Route path="client-jobs" element={<ClientJobs />} />
+          </Route>
         </Routes>
       </main>
     </div>

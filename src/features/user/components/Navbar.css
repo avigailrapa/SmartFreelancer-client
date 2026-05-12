@@ -1,21 +1,20 @@
-/* מוודא שהגוף לא דוחף את הנאבבר בצורה מוזרה */
 body {
   margin: 0;
-  padding-top: 80px; /* משאיר מקום לנאבבר הקבוע */
+  padding-top: 80px;
 }
 
 .navbar {
   width: 100%;
   height: 80px;
-  background-color: #ffffff !important; /* רקע לבן מוצק */
+  background-color: #ffffff !important;
   border-bottom: 1px solid #e4e5e7;
   display: flex;
   align-items: center;
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 2000; /* ערך גבוה מאוד כדי שלא יסתתר */
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* צל עדין להפרדה */
+  z-index: 2000;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .navbar-container {
@@ -28,11 +27,10 @@ body {
   align-items: center;
 }
 
-/* עיצוב הלוגו - מוודא שהוא שחור ובולט */
 .logo {
   font-family: "Segoe UI", Helvetica, Arial, sans-serif;
   font-size: 28px;
-  color: #404145 !important; /* אפור כמעט שחור */
+  color: #404145 !important;
   font-weight: 900;
   text-decoration: none;
   display: flex;
@@ -40,20 +38,19 @@ body {
 }
 
 .logo-dot {
-  color: #1dbf73 !important; /* ירוק פייבר לנקודה */
+  color: #1dbf73 !important;
   margin-left: 1px;
 }
 
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 30px; /* ריווח ברור בין הפריטים */
+  gap: 30px;
 }
 
-/* עיצוב הקישורים - מוודא שהם אפורים כהים וקריאים */
 .nav-link {
   text-decoration: none;
-  color: #62646a !important; /* צבע אפור כהה קריא */
+  color: #62646a !important;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
@@ -79,98 +76,100 @@ body {
   background-color: #1dbf73;
   color: white !important;
 }
-/* זה החלק שמתקן את הכחול של הקישורים */
-.navbar a, 
-.navbar .nav-link, 
+
+.navbar a,
+.navbar .nav-link,
 .logo {
-  text-decoration: none !important; /* מבטל קו תחתון */
-  color: #404145 !important;       /* צבע אפור כהה במקום כחול */
+  text-decoration: none !important;
+  color: #404145 !important;
 }
 
-/* מוודא שגם ה-Browse Jobs וגם ה-Sign In נראים אותו דבר */
 .nav-link {
-  color: #62646a !important; 
+  color: #62646a !important;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
 }
 
-/* הצבע הירוק של הנקודה - חייב להישאר ירוק */
 .logo-dot {
   color: #1dbf73 !important;
 }
 
-/* אפקט מעבר עכבר כדי שנדע שזה לחיץ */
 .nav-link:hover {
   color: #1dbf73 !important;
 }
 .nav-profile-section {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .profile-dropdown-container {
-    position: relative; /* חשוב מאוד כדי שהתפריט יצוף מתחתיו */
-    padding: 5px;
+  position: relative;
+  padding: 5px;
 }
 
 .profile-avatar-circle {
-    width: 36px;
-    height: 36px;
-    background-color: #1dbf73; /* ירוק מקצועי או כחול */
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  width: 36px;
+  height: 36px;
+  background-color: #1dbf73;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .profile-dropdown-menu {
-    position: absolute;
-    top: 45px;
-    right: 0;
-    background: white;
-    border: 1px solid #e4e5e7;
-    border-radius: 4px;
-    width: 180px;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    
-    /* מוסתר כברירת מחדל */
-    display: none; 
-    z-index: 1000;
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: white;
+  border: 1px solid #e4e5e7;
+  border-radius: 4px;
+  width: 180px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1000;
 }
 
-/* הצגת התפריט במעבר עכבר על המיכל */
 .profile-dropdown-container:hover .profile-dropdown-menu {
-    display: block;
+  display: block;
 }
 
 .dropdown-header {
-    padding: 10px 15px;
-    border-bottom: 1px solid #efeff0;
-    display: flex;
-    flex-direction: column;
+  padding: 10px 15px;
+  border-bottom: 1px solid #efeff0;
+  display: flex;
+  flex-direction: column;
 }
 
-.dropdown-name { font-weight: bold; font-size: 14px; }
-.dropdown-type { font-size: 12px; color: #74767e; }
+.dropdown-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+.dropdown-type {
+  font-size: 12px;
+  color: #74767e;
+}
+
+.dropdown-item:hover {
+  background-color: #f5f5f5;
+  color: #404145;
+}
 
 .dropdown-item {
-    display: block;
-    padding: 10px 15px;
-    color: #404145;
-    text-decoration: none;
-    font-size: 14px;
-    background: none;
-    border: none;
-    width: 100%;
-    text-align: left;
-    cursor: pointer;
+  display: block;
+  padding: 10px 15px;
+  color: #404145;
+  text-decoration: none;
+  font-size: 14px;
+  background: #ffffff !important;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
 }
-
-.dropdown-item:hover { background-color: #f7f7f7; }
-
-.logout-link { color: #f44336; border-top: 1px solid #efeff0; }

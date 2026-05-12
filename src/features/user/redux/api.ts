@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { login, logout } from "./userSlice";
 import type { User } from "../../../types/user";
-// import type { RootState } from "../../../app/store";
 
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -20,38 +19,23 @@ export const userApi = createApi({
   endpoints: (builder) => ({
     // ---------- LOGIN ----------
     login: builder.mutation({
-      query: (credentials) => ({
-        url: "/Auth/login",
+      query: ({ asFreelancer = false, ...credentials }) => ({
+        url: `/Auth/login?asFreelancer=${asFreelancer}`,
         method: "POST",
         body: credentials,
       }),
       async onQueryStarted(_arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-
-          console.log("Success! Server returned:", data);
-
           const token = data?.token || data?.Token;
           const user = data?.user || data?.User;
 
           if (token && user) {
             localStorage.setItem("token", token);
             dispatch(login({ user, token }));
-            console.log("User logged in and state updated.");
           }
         } catch (err) {
-          // כאן אנחנו מדפיסים את השגיאה המדויקת מהשרת
-          const errorData = (err as Record<string, unknown>)?.error?.data;
-          console.error("--- LOGIN ERROR ---");
-          console.log(
-            "Status Code:",
-            (err as Record<string, unknown>)?.error?.status,
-          );
-          console.log(
-            "Error Detail:",
-            errorData?.detail || errorData?.Message || "Unknown error",
-          );
-          console.log("Full Error Object:", err);
+          console.log("Login error:", err);
         }
       },
     }),
@@ -65,7 +49,7 @@ export const userApi = createApi({
     // ---------- UPDATE ----------
     updateUser: builder.mutation<User, Partial<User>>({
       query: (userPayload) => ({
-        url: "/User", // הוספת לוכסן בתחילת הנתיב
+        url: "/User",
         method: "PUT",
         body: userPayload,
       }),

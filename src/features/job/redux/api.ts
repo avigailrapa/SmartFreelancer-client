@@ -34,7 +34,12 @@ export const jobApi = createApi({
     // ---------- GET BY ID ----------
     getJobById: builder.query<Job, number>({
       query: (id) => `/${id}`,
-      providesTags: (result, error, id) => [{ type: "Job", id }],
+      providesTags: (_result, _error, id) => [{ type: "Job", id }],
+    }),
+
+    // ---------- GET MY JOBS  ----------
+    getMyJobs: builder.query<Job[], void>({
+      query: () => "/my-jobs",
     }),
 
     // ---------- ADD ----------
@@ -54,7 +59,7 @@ export const jobApi = createApi({
         method: "PUT",
         body: job,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "Job", id }],
+      invalidatesTags: (_result, _error, { id }) => [{ type: "Job", id }],
     }),
 
     // ---------- DELETE ----------
@@ -72,6 +77,7 @@ export const {
   useGetAllJobsQuery,
   useGetOpenJobsQuery,
   useGetJobByIdQuery,
+  useGetMyJobsQuery,
   useCreateJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,

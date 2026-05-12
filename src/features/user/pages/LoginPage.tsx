@@ -1,4 +1,4 @@
-import { useState } from "react"; // 1. הוספתי useEffect כאן
+import { useState, useEffect } from "react"; // הוספנו useEffect
 import { useLoginMutation } from "../redux/api";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Auth.css";
@@ -10,26 +10,49 @@ interface LoginPageProps {
 export const LoginPage = ({ onClose }: LoginPageProps) => {
   const [loginUser, { isLoading }] = useLoginMutation();
   const [form, setForm] = useState({ email: "", password: "" });
+  const [status, setStatus] = useState<{
+    type: "error" | "success";
+    text: string;
+  } | null>(null);
+
+  const resetForm = () => {
+    setForm({ email: "", password: "" });
+    setStatus(null);
+  };
+
+  useEffect(() => {
+    resetForm();
+  }, []);
 
   const handleClose = () => {
-    setForm({ email: "", password: "" });
+    resetForm(); 
     onClose();
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setStatus(null);
+
     try {
       const result = await loginUser({
         Email: form.email,
         Password: form.password,
       }).unwrap();
+
       if (result.token) {
         localStorage.setItem("token", result.token);
       }
-      setForm({ email: "", password: "" });
-      handleClose();
+
+      setStatus({ type: "success", text: "Login successful!" });
+
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     } catch (err) {
-      console.error("Login failed:", err);
+      setStatus({
+        type: "error",
+        text: "Invalid email or password. Please try again.",
+      });
     }
   };
 
@@ -42,7 +65,10 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
 
         <h2 className="auth-title">Sign in to your account</h2>
 
-        {/* הוסיפי autoComplete="off" כדי שהדפדפן לא ימלא לבד */}
+        {status && (
+          <div className={`status-message ${status.type}`}>{status.text}</div>
+        )}
+
         <form onSubmit={handleSubmit} autoComplete="off">
           <div className="input-group">
             <label>Email</label>
@@ -50,7 +76,7 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
               type="email"
               className="fiverr-input"
               name="email"
-              autoComplete="new-password"
+              autoComplete="none" 
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
@@ -62,8 +88,8 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
               type="password"
               className="fiverr-input"
               name="password"
-              autoComplete="new-password" // 👈 גם כאן
-              value={form.password} // 3. הוספת value לסנכרון
+              autoComplete="new-password" 
+              value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               required
             />
@@ -71,7 +97,7 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
           <button
             className="fiverr-submit-btn"
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || status?.type === "success"}
           >
             {isLoading ? "Connecting..." : "Continue"}
           </button>

@@ -4,23 +4,20 @@ import type { RootState } from "../../../app/store";
 import { login } from "../redux/userSlice";
 import { useUpdateUserMutation } from "../redux/api";
 
-export const ClientDashboard = () => {
+export const ClientProfile = () => {
   const dispatch = useDispatch();
 
-  // שליפת המשתמש והטוקן מה-Redux
   const user = useSelector((state: RootState) => state.user.user);
   const token = useSelector((state: RootState) => state.user.token);
 
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [isEditing, setIsEditing] = useState(false);
 
-  // formData נשאר ריק כברירת מחדל
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
   });
 
-  // פונקציה למעבר למצב עריכה וריקון השדות
   const handleStartEdit = () => {
     setFormData({
       fullName: "",
@@ -42,29 +39,24 @@ export const ClientDashboard = () => {
     e.preventDefault();
     if (!user) return;
 
-    // ולידציה בסיסית - לוודא שהמשתמש אכן הזין משהו
     if (!formData.fullName.trim() || !formData.email.trim()) {
       alert("Please fill in both name and email.");
       return;
     }
 
     try {
-      // שליחת האובייקט המלא לשרת.
-      // שים לב: השמות כאן צריכים להתאים בדיוק ל-UserDto ב-C# (בדרך כלל PascalCase)
       const updatedUser = await updateUser({
-        id: user.id, // חובה לשלוח ID כדי שה-Service ידע את מי לעדכן
+        id: user.id,
         fullName: formData.fullName,
         email: formData.email,
         freelancerId: user.freelancerId ?? null,
       }).unwrap();
 
-      // עדכון ה-Redux עם המידע החדש שחזר מהשרת
       dispatch(login({ user: updatedUser, token: token! }));
 
       setIsEditing(false);
       alert("Profile updated successfully!");
     } catch (err) {
-      // אם יש שגיאה 500, היא תתפס כאן
       console.error("Failed to update user:", err);
       alert("Error: Could not update profile. Please try again.");
     }
@@ -76,12 +68,10 @@ export const ClientDashboard = () => {
     <div className="dashboard-container">
       <div className="dashboard-card">
         <div className="profile-header">
-          <h2>Hello {user.fullName} 👋</h2>
+          <h2>Hello {user.fullName} </h2>
           <p>You can update your personal information below</p>
         </div>
-
         <form onSubmit={handleSubmit} className="profile-form">
-          {/* Full Name Field */}
           <div className="form-group">
             <label>Full Name:</label>
             {isEditing ? (
@@ -98,7 +88,6 @@ export const ClientDashboard = () => {
             )}
           </div>
 
-          {/* Email Field */}
           <div className="form-group">
             <label>Email Address:</label>
             {isEditing ? (

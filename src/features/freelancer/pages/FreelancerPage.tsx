@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { useGetAllFreelancersQuery } from "../redux/api";
 import "../../HomePage.css";
 import "./FreelancerPage.css";
+import { useClickOutside } from "../hooks/useClickOutside";
 
 const experienceLabels: Record<string, string> = {
   Junior: "Junior",
@@ -28,24 +29,12 @@ export const FreelancersPage = () => {
   const budgetRef = useRef<HTMLDivElement>(null);
   const expRef = useRef<HTMLDivElement>(null);
 
+  useClickOutside(budgetRef, () => setIsBudgetOpen(false));
+  useClickOutside(expRef, () => setIsExperienceOpen(false));
+
   useEffect(() => {
     setSearchTerm(initialSearch);
   }, [initialSearch]);
-
-  // סגירה בלחיצה מחוץ
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (budgetRef.current && !budgetRef.current.contains(e.target as Node)) {
-        setIsBudgetOpen(false);
-      }
-      if (expRef.current && !expRef.current.contains(e.target as Node)) {
-        setIsExperienceOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const filteredFreelancers = useMemo(() => {
     if (!freelancers) return [];
@@ -58,7 +47,7 @@ export const FreelancersPage = () => {
         f.userName?.toLowerCase().includes(term) ||
         f.mainCategoryName?.toLowerCase().includes(term) ||
         f.specializationNames?.some((s: string) =>
-          s.toLowerCase().includes(term)
+          s.toLowerCase().includes(term),
         ) ||
         f.skillNames?.some((s: string) => s.toLowerCase().includes(term));
 
@@ -67,7 +56,7 @@ export const FreelancersPage = () => {
         (f.hourlyRate || 0) <= priceRange[1];
 
       const matchesLevel =
-        selectedLevel === "All" || f.experienceLevel === selectedLevel;
+        selectedLevel === "All" || String(f.experienceLevel) === selectedLevel;
 
       return matchesSearch && matchesPrice && matchesLevel;
     });
@@ -79,7 +68,6 @@ export const FreelancersPage = () => {
     <div className="browse-wrapper">
       <section className="filters-top-bar">
         <div className="filter-group">
-
           {/* EXPERIENCE */}
           <div className="filter-item-wrapper" ref={expRef}>
             <button
@@ -108,13 +96,12 @@ export const FreelancersPage = () => {
                     >
                       {level === "All" ? "All Levels" : experienceLabels[level]}
                     </div>
-                  )
+                  ),
                 )}
               </div>
             )}
           </div>
 
-          {/* BUDGET */}
           <div className="filter-item-wrapper" ref={budgetRef}>
             <button
               className={`filter-btn ${isBudgetOpen ? "active" : ""}`}
@@ -133,7 +120,6 @@ export const FreelancersPage = () => {
                 </div>
 
                 <div className="range-track">
-                  {/* Thumb תחתון - min */}
                   <input
                     type="range"
                     min="20"
@@ -143,13 +129,12 @@ export const FreelancersPage = () => {
                     onChange={(e) => {
                       const val = Math.min(
                         Number(e.target.value),
-                        priceRange[1] - 10
+                        priceRange[1] - 10,
                       );
                       setPriceRange([val, priceRange[1]]);
                     }}
                     className="range-input range-lower"
                   />
-                  {/* Thumb עליון - max */}
                   <input
                     type="range"
                     min="20"
@@ -159,14 +144,13 @@ export const FreelancersPage = () => {
                     onChange={(e) => {
                       const val = Math.max(
                         Number(e.target.value),
-                        priceRange[0] + 10
+                        priceRange[0] + 10,
                       );
                       setPriceRange([priceRange[0], val]);
                     }}
                     className="range-input range-upper"
                   />
 
-                  {/* פס צבוע בין שני הthumb-ים */}
                   <div
                     className="range-fill"
                     style={{
@@ -188,7 +172,6 @@ export const FreelancersPage = () => {
             )}
           </div>
 
-          {/* CLEAR */}
           <button
             className="clear-btn"
             onClick={() => {
@@ -200,7 +183,9 @@ export const FreelancersPage = () => {
           </button>
         </div>
 
-        <div className="results-count">{filteredFreelancers.length} results</div>
+        <div className="results-count">
+          {filteredFreelancers.length} results
+        </div>
       </section>
 
       <main className="results-area">
@@ -225,8 +210,7 @@ export const FreelancersPage = () => {
                 </div>
 
                 <p className="card-title">
-                  I will provide professional{" "}
-                  {f.mainCategoryName || "services"}
+                  I will provide professional {f.mainCategoryName || "services"}
                 </p>
 
                 <div className="card-rating">

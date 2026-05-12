@@ -37,3 +37,26 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
+/* עיצוב כללי להודעת הסטטוס */
+.status-message {
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* עיצוב ספציפי לשגיאה */
+.status-message.error {
+    background-color: #ffebe9;
+    color: #ff4d4d;
+    border: 1px solid #ff4d4d;
+}
+
+/* עיצוב ספציפי להצלחה */
+.status-message.success {
+    background-color: #e6f9f0;
+    color: #1dbf73;
+    border: 1px solid #1dbf73;
+}
