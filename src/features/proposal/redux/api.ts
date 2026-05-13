@@ -35,7 +35,6 @@ export const proposalApi = createApi({
         jobId: number;
         hourlyRate: number;
         estimatedHours: number;
-        totalEstimatedPrice: number;
         message: string;
       }
     >({
