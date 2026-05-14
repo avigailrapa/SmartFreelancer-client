@@ -14,7 +14,7 @@ export const FreelancerLayout = () => {
               to="profile"
               className={`nav-link ${isActive("profile") ? "active" : ""}`}
             >
-              👤 Account Profile
+              Account Profile
             </Link>
           </li>
           <li>
@@ -22,7 +22,7 @@ export const FreelancerLayout = () => {
               to="matching"
               className={`nav-link ${isActive("matching") ? "active" : ""}`}
             >
-              💼 My Jobs
+              My Jobs
             </Link>
           </li>
         </ul>

@@ -1,15 +1,28 @@
 import { useState } from "react";
 import { useGetMyJobsQuery } from "../../job/redux/api";
 import { JobProposals } from "../../proposal/components/JobProposals";
+import { AddJobForm } from "../components/AddJobForm";
 import "../../proposal/components/ProposalStyles.css";
+import "./ClientJobs.css";
 
 export const ClientJobs = () => {
-  const { data: myJobs, isLoading, isError } = useGetMyJobsQuery();
+  const { data: myJobs, isLoading, isError, refetch } = useGetMyJobsQuery();
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+
+  const handleJobAdded = () => {
+    setShowAddForm(false);
+    refetch();
+  };
 
   return (
     <div className="my-jobs-section">
-      <h3>My Jobs</h3>
+      <div className="jobs-header">
+        <h3>My Jobs</h3>
+        <button className="btn-add-job" onClick={() => setShowAddForm(true)}>
+          + Add New Job
+        </button>
+      </div>
 
       {isLoading && <p>Loading...</p>}
 
@@ -53,6 +66,13 @@ export const ClientJobs = () => {
           )}
         </div>
       ))}
+
+      {showAddForm && (
+        <AddJobForm
+          onJobAdded={handleJobAdded}
+          onCancel={() => setShowAddForm(false)}
+        />
+      )}
     </div>
   );
 };

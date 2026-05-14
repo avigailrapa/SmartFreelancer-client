@@ -26,13 +26,15 @@
 
 /* ── Sidebar Navigation (צר מאוד) ────────────── */
 .sidebar {
-  width: 180px;
+  width: 220px;
   background: var(--white);
   border-right: 1px solid var(--border);
   padding: 20px 0;
   min-height: 100vh;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.03);
   font-family: "DM Sans", sans-serif;
+  position: sticky;
+  top: 0;
 }
 
 .sidebar-nav {
@@ -275,43 +277,7 @@ select.form-control {
 }
 
 /* ── Responsive ──────────────────────────────── */
-@media (max-width: 900px) {
-  .dashboard-wrapper {
-    flex-direction: column;
-  }
-
-  .sidebar {
-    width: 100%;
-    min-height: auto;
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-    padding: 12px 0;
-  }
-
-  .sidebar-nav {
-    display: flex;
-    gap: 4px;
-    overflow-x: auto;
-    padding: 0 12px;
-  }
-
-  .sidebar-nav li {
-    flex-shrink: 0;
-  }
-
-  .nav-link {
-    padding: 8px 12px;
-    font-size: 12px;
-    border-left: none;
-    border-bottom: 2px solid transparent;
-  }
-
-  .nav-link:hover,
-  .nav-link.active {
-    border-left: none;
-    border-bottom-color: var(--green);
-  }
-
+@media (max-width: 1200px) {
   .main-content {
     padding: 24px;
   }
