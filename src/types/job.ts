@@ -9,7 +9,7 @@ export interface Job {
   maxPayPerHour: number;
   mainCategoryId: number;
   mainCategoryName?: string;
-  status: number;
+  status: string;
   assignedFreelancerId: number;
   assignedFreelancerName?: string;
   requiredSkillIds: number[];

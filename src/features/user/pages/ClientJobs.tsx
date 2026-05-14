@@ -50,9 +50,9 @@ export const ClientJobs = () => {
               <span>Budget: ${job.maxPayPerHour}/hr</span>
               <span>
                 Status:{" "}
-                {job.status === 0
+                {job.status === "Open"
                   ? "Open"
-                  : job.status === 1
+                  : job.status === "InProgress"
                     ? "In Progress"
                     : "Completed"}
               </span>

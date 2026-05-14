@@ -79,7 +79,7 @@ export const JobProposals = ({ jobId }: JobProposalsProps) => {
             </div>
           </div>
 
-          {proposal.status === "pending" && (
+          {proposal.status === "Pending" && (
             <div className="proposal-actions">
               <button
                 className="accept-btn"

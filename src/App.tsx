@@ -10,10 +10,11 @@ import { FreelancerLayout } from "./features/freelancer/pages/FreelancerLayout";
 import { ProfilePage } from "./features/freelancer/pages/ProfilePage";
 import { OptimizationPage } from "./features/freelancer/pages/OptimizationPage";
 import { ClientJobs } from "./features/user/pages/ClientJobs";
-import "./App.css";
 import { ClientLayout } from "./features/user/pages/ClientLayout";
 import { ClientProfile } from "./features/user/pages/ClientProfile";
 import { BecomeFreelancer } from "./features/freelancer/pages/BecomeFreelancer";
+import { MyProposals } from "./features/proposal/pages/myProposals";
+import "./App.css";
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -53,6 +54,7 @@ function App() {
             <Route index element={<Navigate to="profile" replace />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="matching" element={<OptimizationPage />} />
+            <Route path="my-proposals" element={<MyProposals />} />
           </Route>
 
           <Route path="/client-dashboard" element={<ClientLayout />}>

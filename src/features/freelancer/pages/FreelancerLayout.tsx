@@ -25,6 +25,14 @@ export const FreelancerLayout = () => {
               My Jobs
             </Link>
           </li>
+          <li>
+            <Link
+              to="my-proposals"
+              className={`nav-link ${isActive("my-proposals") ? "active" : ""}`}
+            >
+              My Proposals
+            </Link>
+          </li>
         </ul>
       </nav>
       <main className="main-content">

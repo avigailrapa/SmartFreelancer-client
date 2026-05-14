@@ -10,7 +10,7 @@ export interface Proposal {
   estimatedHours: number;
   totalEstimatedPrice: number;
   message: string;
-  status: "pending" | "accepted" | "rejected";
+  status: string;
   createdAt: string;
   isClientInvite: boolean;
 }

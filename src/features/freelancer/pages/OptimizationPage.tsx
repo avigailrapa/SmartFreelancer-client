@@ -1,19 +1,12 @@
 import { useState } from "react";
 import { useGetOptimalJobsQuery } from "../../matching/redux/api";
+import { SubmitProposal } from "../../proposal/components/SubmitProposal";
+import type { Job } from "../../../types/job";
 import '../../job/pages/JobsPages.css'
 
 export const OptimizationPage = () => {
   const { data: jobs, isLoading, refetch, isFetching } = useGetOptimalJobsQuery();
-  const [appliedJobs, setAppliedJobs] = useState<Set<string | number>>(new Set());
-  const [applyingTo, setApplyingTo] = useState<string | number | null>(null);
-
-  const handleApply = async (jobId: string | number) => {
-    setApplyingTo(jobId);
-    // TODO: קריאת API אמיתית:
-    // await dispatch(applyToJob({ jobId })).unwrap();
-    setAppliedJobs((prev) => new Set(prev).add(jobId));
-    setApplyingTo(null);
-  };
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   return (
     <div className="fvr-wrapper">
@@ -51,8 +44,6 @@ export const OptimizationPage = () => {
         <div className="fvr-grid">
           {jobs?.map((job: any) => {
             const total = job.requiredHours * job.maxPayPerHour;
-            const isApplied = appliedJobs.has(job.id);
-            const isApplying = applyingTo === job.id;
 
             return (
               <div key={job.id} className="fvr-card">
@@ -64,7 +55,6 @@ export const OptimizationPage = () => {
                     <span className="fvr-client-name">{job.clientName ?? "Unknown"}</span>
                     <span className="fvr-date">Matched for you</span>
                   </div>
-                  {isApplied && <span className="fvr-badge-applied">Applied ✓</span>}
                 </div>
 
                 <div className="fvr-card-body">
@@ -91,19 +81,23 @@ export const OptimizationPage = () => {
                     </span>
                   </div>
                   <button
-                    className={`fvr-apply-btn ${isApplied ? "fvr-apply-btn--applied" : ""}`}
-                    onClick={() => handleApply(job.id)}
-                    disabled={isApplied || isApplying}
+                    className="fvr-apply-btn"
+                    onClick={() => setSelectedJob(job)}
                   >
-                    {isApplying ? (
-                      <><span className="fvr-spinner" /> Sending...</>
-                    ) : isApplied ? "Applied" : "Apply Now"}
+                    Apply Now
                   </button>
                 </div>
               </div>
             );
           })}
         </div>
+      )}
+
+      {selectedJob && (
+        <SubmitProposal
+          job={selectedJob}
+          onClose={() => setSelectedJob(null)}
+        />
       )}
     </div>
   );

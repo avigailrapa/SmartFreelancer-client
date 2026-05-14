@@ -19,7 +19,7 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
     hourlyRate: job.maxPayPerHour || 0,
     estimatedHours: job.requiredHours || 0,
     message: "",
-    proposalDuration: 3, // days to deliver
+    proposalDuration: 3,
   });
 
   const totalEstimatedPrice = formData.hourlyRate * formData.estimatedHours;
@@ -62,7 +62,14 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
       alert("Proposal submitted successfully!");
       onClose();
     } catch (err: any) {
-      alert(`Error: ${err.data?.message || "Something went wrong"}`);
+      console.log(err);
+
+      alert(
+        err?.data?.message ||
+          err?.data?.title ||
+          JSON.stringify(err?.data) ||
+          "Something went wrong",
+      );
     }
   };
 
@@ -85,10 +92,8 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
           </button>
         </div>
 
-        {/* Divider */}
         <div className="proposal-divider"></div>
 
-        {/* Job Info Card */}
         <div className="proposal-job-card">
           <div className="job-card-left">
             <p className="job-card-label">Job Title</p>
@@ -101,9 +106,8 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="proposal-form-fiverr">
-          {/* Budget Section */}
           <div className="proposal-section">
-            <h4 className="section-title">💰 Proposal Budget</h4>
+            <h4 className="section-title"> Proposal Budget</h4>
 
             <div className="proposal-form-row">
               <div className="proposal-form-group">
@@ -192,7 +196,6 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
             </div>
           </div>
 
-          {/* Price Breakdown */}
           <div className="price-breakdown">
             <div className="price-row">
               <span>Hourly rate:</span>
@@ -210,9 +213,8 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
             </div>
           </div>
 
-          {/* Message Section */}
           <div className="proposal-section">
-            <h4 className="section-title">📝 Cover Letter</h4>
+            <h4 className="section-title"> Cover Letter</h4>
 
             <div className="proposal-form-group full-width">
               <label>Why are you the best fit for this job?</label>
@@ -248,7 +250,7 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
 
           {/* Tips Box */}
           <div className="proposal-tips-box">
-            <p className="tips-title">💡 Tips for a strong proposal:</p>
+            <p className="tips-title"> Tips for a strong proposal:</p>
             <ul className="tips-list">
               <li>
                 Be specific about your experience and previous similar work
@@ -258,7 +260,6 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
             </ul>
           </div>
 
-          {/* Actions */}
           <div className="proposal-modal-footer">
             <button
               type="button"

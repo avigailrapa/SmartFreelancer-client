@@ -70,6 +70,14 @@ export const jobApi = createApi({
       }),
       invalidatesTags: [{ type: "Job", id: "LIST" }],
     }),
+    // ---------- COMPLETE ----------
+    completeJob: builder.mutation<void, number>({
+      query: (jobId) => ({
+        url: `/${jobId}/complete`,
+        method: "PUT",
+      }),
+      invalidatesTags: [{ type: "Job", id: "LIST" }],
+    }),
   }),
 });
 
@@ -81,4 +89,5 @@ export const {
   useCreateJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,
+  useCompleteJobMutation,
 } = jobApi;
