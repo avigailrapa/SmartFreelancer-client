@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGetMyJobsQuery } from "../../job/redux/api";
+import { useGetMyJobsQuery, useDeleteJobMutation } from "../../job/redux/api";
 import { JobProposals } from "../../proposal/components/JobProposals";
 import { AddJobForm } from "../components/AddJobForm";
 import "../../proposal/components/ProposalStyles.css";
@@ -7,11 +7,18 @@ import "./ClientJobs.css";
 
 export const ClientJobs = () => {
   const { data: myJobs, isLoading, isError, refetch } = useGetMyJobsQuery();
+  const [deleteJob] = useDeleteJobMutation();
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const handleJobAdded = () => {
     setShowAddForm(false);
+    refetch();
+  };
+
+  const handleDelete = async (jobId: number) => {
+    if (!confirm("Are you sure you want to delete this job?")) return;
+    await deleteJob(jobId);
     refetch();
   };
 
@@ -25,9 +32,7 @@ export const ClientJobs = () => {
       </div>
 
       {isLoading && <p>Loading...</p>}
-
       {isError && <p>Something went wrong</p>}
-
       {!isLoading && myJobs?.length === 0 && <p>No jobs yet</p>}
 
       {myJobs?.map((job) => (
@@ -39,9 +44,20 @@ export const ClientJobs = () => {
             }
           >
             <h4>{job.title}</h4>
-            <span className="expand-icon">
-              {expandedJob === job.jobId ? "▼" : "▶"}
-            </span>
+            <div className="job-header-actions">
+              <span className="expand-icon">
+                {expandedJob === job.jobId ? "▼" : "▶"}
+              </span>
+              <button
+                className="btn-delete-job"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(job.jobId);
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
 
           <div className="job-details">

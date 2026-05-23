@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../app/store";
 import { login } from "../redux/userSlice";
 import { useUpdateUserMutation } from "../redux/api";
+import styles from "../../freelancer/pages/Dashboard.module.scss";
 
 export const ClientProfile = () => {
   const dispatch = useDispatch();
@@ -19,16 +20,11 @@ export const ClientProfile = () => {
   });
 
   const handleStartEdit = () => {
-    setFormData({
-      fullName: "",
-      email: "",
-    });
+    setFormData({ fullName: "", email: "" });
     setIsEditing(true);
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
+  const handleCancel = () => setIsEditing(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -53,7 +49,6 @@ export const ClientProfile = () => {
       }).unwrap();
 
       dispatch(login({ user: updatedUser, token: token! }));
-
       setIsEditing(false);
       alert("Profile updated successfully!");
     } catch (err) {
@@ -62,78 +57,79 @@ export const ClientProfile = () => {
     }
   };
 
-  if (!user) return <div className="error-msg">No user logged in</div>;
+  if (!user) return <div className={styles.error}>No user logged in</div>;
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-card">
-        <div className="profile-header">
-          <h2>Hello {user.fullName} </h2>
-          <p>You can update your personal information below</p>
+    <div className={styles.card}>
+      <div className={styles.profileHeader}>
+        <h1>Hello {user.fullName}</h1>
+        <p>You can update your personal information below</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className={styles.profileForm}>
+        <div className={styles.formGroup}>
+          <label>Full Name</label>
+          {isEditing ? (
+            <input
+              className={styles.formControl}
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={handleChange}
+              placeholder="Enter new name"
+              required
+            />
+          ) : (
+            <p className={styles.displayText}>{user.fullName}</p>
+          )}
         </div>
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div className="form-group">
-            <label>Full Name:</label>
-            {isEditing ? (
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder="Enter new name"
-                required
-              />
-            ) : (
-              <span className="info-text">{user.fullName}</span>
-            )}
-          </div>
 
-          <div className="form-group">
-            <label>Email Address:</label>
-            {isEditing ? (
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="Enter new email"
-                required
-              />
-            ) : (
-              <span className="info-text">{user.email}</span>
-            )}
-          </div>
+        <div className={styles.formGroup}>
+          <label>Email Address</label>
+          {isEditing ? (
+            <input
+              className={styles.formControl}
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter new email"
+              required
+            />
+          ) : (
+            <p className={styles.displayText}>{user.email}</p>
+          )}
+        </div>
 
-          <div className="actions">
-            {!isEditing ? (
+        <div className={styles.actionsFooter}>
+          {!isEditing ? (
+            <button
+              type="button"
+              className={styles.btnPrimary}
+              onClick={handleStartEdit}
+            >
+              Edit Profile
+            </button>
+          ) : (
+            <div className={styles.buttonGroup}>
+              <button
+                type="submit"
+                className={styles.btnPrimary}
+                disabled={isUpdating}
+              >
+                {isUpdating ? "Saving..." : "Save Changes"}
+              </button>
               <button
                 type="button"
-                className="edit-btn"
-                onClick={handleStartEdit}
+                className={styles.btnCancel}
+                onClick={handleCancel}
               >
-                Edit Profile
+                Cancel
               </button>
-            ) : (
-              <div className="button-group">
-                <button
-                  type="submit"
-                  className="save-btn"
-                  disabled={isUpdating}
-                >
-                  {isUpdating ? "Saving..." : "Save Changes"}
-                </button>
-                <button
-                  type="button"
-                  className="cancel-btn"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
-        </form>
-      </div>
+            </div>
+          )}
+        </div>
+      </form>
     </div>
   );
 };

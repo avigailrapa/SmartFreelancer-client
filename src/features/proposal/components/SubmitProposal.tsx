@@ -64,12 +64,7 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
     } catch (err: any) {
       console.log(err);
 
-      alert(
-        err?.data?.message ||
-          err?.data?.title ||
-          JSON.stringify(err?.data) ||
-          "Something went wrong",
-      );
+      alert(err?.data?.detail || err?.data?.message || err?.data?.title);
     }
   };
 

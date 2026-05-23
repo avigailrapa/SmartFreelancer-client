@@ -2,10 +2,15 @@ import { useState } from "react";
 import { useGetOptimalJobsQuery } from "../../matching/redux/api";
 import { SubmitProposal } from "../../proposal/components/SubmitProposal";
 import type { Job } from "../../../types/job";
-import '../../job/pages/JobsPages.css'
+import "../../job/pages/JobsPages.css";
 
 export const OptimizationPage = () => {
-  const { data: jobs, isLoading, refetch, isFetching } = useGetOptimalJobsQuery();
+  const {
+    data: jobs,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useGetOptimalJobsQuery();
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   return (
@@ -22,10 +27,20 @@ export const OptimizationPage = () => {
             disabled={isFetching}
           >
             {isFetching ? (
-              <><span className="fvr-spinner fvr-spinner--dark" /> Calculating...</>
+              <>
+                <span className="fvr-spinner fvr-spinner--dark" />{" "}
+                Calculating...
+              </>
             ) : (
               <>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <polyline points="23 4 23 10 17 10" />
                   <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
                 </svg>
@@ -42,17 +57,23 @@ export const OptimizationPage = () => {
         <div className="fvr-error">No optimal jobs found. Try refreshing.</div>
       ) : (
         <div className="fvr-grid">
-          {jobs?.map((job: any) => {
+          {jobs?.map((job: Job) => {
             const total = job.requiredHours * job.maxPayPerHour;
 
             return (
               <div key={job.id} className="fvr-card">
                 <div className="fvr-card-top">
                   <div className="fvr-avatar">
-                    {(job.clientName?.[0] ?? job.title?.[0] ?? "?").toUpperCase()}
+                    {(
+                      job.clientName?.[0] ??
+                      job.title?.[0] ??
+                      "?"
+                    ).toUpperCase()}
                   </div>
                   <div className="fvr-client-info">
-                    <span className="fvr-client-name">{job.clientName ?? "Unknown"}</span>
+                    <span className="fvr-client-name">
+                      {job.clientName ?? "Unknown"}
+                    </span>
                     <span className="fvr-date">Matched for you</span>
                   </div>
                 </div>
@@ -67,9 +88,13 @@ export const OptimizationPage = () => {
                     </p>
                   )}
                   <div className="fvr-tags">
-                    {job.requiredSkillNames?.slice(0, 3).map((skill: string) => (
-                      <span key={skill} className="fvr-tag">{skill}</span>
-                    ))}
+                    {job.requiredSkillNames
+                      ?.slice(0, 3)
+                      .map((skill: string) => (
+                        <span key={skill} className="fvr-tag">
+                          {skill}
+                        </span>
+                      ))}
                   </div>
                 </div>
 
@@ -77,7 +102,8 @@ export const OptimizationPage = () => {
                   <div className="fvr-price">
                     <span className="fvr-price-label">TOTAL</span>
                     <span className="fvr-price-value">
-                      ${total.toLocaleString()}<span> ({job.requiredHours}h)</span>
+                      ${total.toLocaleString()}
+                      <span> ({job.requiredHours}h)</span>
                     </span>
                   </div>
                   <button

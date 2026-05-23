@@ -40,6 +40,7 @@ export const jobApi = createApi({
     // ---------- GET MY JOBS  ----------
     getMyJobs: builder.query<Job[], void>({
       query: () => "/my-jobs",
+      providesTags: ["Job"],
     }),
 
     // ---------- ADD ----------
@@ -68,15 +69,13 @@ export const jobApi = createApi({
         url: `/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Job", id: "LIST" }],
+      invalidatesTags: ["Job"],
     }),
-    // ---------- COMPLETE ----------
-    completeJob: builder.mutation<void, number>({
-      query: (jobId) => ({
-        url: `/${jobId}/complete`,
-        method: "PUT",
-      }),
-      invalidatesTags: [{ type: "Job", id: "LIST" }],
+
+    // ---------- Freelancer Jobs ----------
+    getFreelancerJobs: builder.query<Job[], void>({
+      query: () => "/freelancer-jobs",
+      providesTags: ["Job"],
     }),
   }),
 });
@@ -89,5 +88,5 @@ export const {
   useCreateJobMutation,
   useUpdateJobMutation,
   useDeleteJobMutation,
-  useCompleteJobMutation,
+  useGetFreelancerJobsQuery,
 } = jobApi;

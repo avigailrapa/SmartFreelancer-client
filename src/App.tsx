@@ -14,6 +14,7 @@ import { ClientLayout } from "./features/user/pages/ClientLayout";
 import { ClientProfile } from "./features/user/pages/ClientProfile";
 import { BecomeFreelancer } from "./features/freelancer/pages/BecomeFreelancer";
 import { MyProposals } from "./features/proposal/pages/myProposals";
+import { FreelancerJobsPage } from "./features/freelancer/pages/FreelancerJobsPage";
 import "./App.css";
 
 function App() {
@@ -43,7 +44,7 @@ function App() {
         <RegisterPage onClose={() => setIsRegisterOpen(false)} />
       )}
 
-      <main className="main-content">
+      <main className="app-main">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/jobs" element={<JobsPage />} />
@@ -55,6 +56,7 @@ function App() {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="matching" element={<OptimizationPage />} />
             <Route path="my-proposals" element={<MyProposals />} />
+            <Route path="freelancer-jobs" element={<FreelancerJobsPage />} />
           </Route>
 
           <Route path="/client-dashboard" element={<ClientLayout />}>

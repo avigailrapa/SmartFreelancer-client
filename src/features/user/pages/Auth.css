@@ -15,9 +15,10 @@
   background: white;
   padding: 40px;
   border-radius: 8px;
-  position: relative; /* מאפשר ל-X להיות ממוקם לפי הריבוע הלבן */
+  position: relative;
   width: 400px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  min-height: 380px; /* ← גובה קבוע */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .close-btn {
@@ -37,26 +38,25 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-/* עיצוב כללי להודעת הסטטוס */
 .status-message {
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    text-align: center;
-    font-weight: 600;
-    font-size: 14px;
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  min-height: 44px; /* ← שומר מקום גם כשאין הודעה */
 }
-
 /* עיצוב ספציפי לשגיאה */
 .status-message.error {
-    background-color: #ffebe9;
-    color: #ff4d4d;
-    border: 1px solid #ff4d4d;
+  background-color: #ffebe9;
+  color: #ff4d4d;
+  border: 1px solid #ff4d4d;
 }
 
 /* עיצוב ספציפי להצלחה */
 .status-message.success {
-    background-color: #e6f9f0;
-    color: #1dbf73;
-    border: 1px solid #1dbf73;
+  background-color: #e6f9f0;
+  color: #1dbf73;
+  border: 1px solid #1dbf73;
 }

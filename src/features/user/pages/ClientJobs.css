@@ -79,6 +79,12 @@
   transition: all 0.2s ease;
 }
 
+.job-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .job-header:hover {
   background: #f0f9f6;
 }
@@ -89,6 +95,28 @@
   font-weight: 600;
   color: #1a1a2e;
   flex: 1;
+}
+
+.btn-delete-job {
+  padding: 8px 14px;
+  border: 1px solid #e11d48;
+  background: #fff1f2;
+  color: #b91c1c;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-delete-job:hover:not(:disabled) {
+  background: #fee2e2;
+  border-color: #f87171;
+}
+
+.btn-delete-job:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .expand-icon {
@@ -137,6 +165,13 @@
   padding: 16px;
   background: #f8f9fa;
   border-top: 1px solid #e5e7eb;
+}
+
+.error-text {
+  margin: 0;
+  padding: 0 16px 12px;
+  color: #b91c1c;
+  font-size: 13px;
 }
 
 /* ==================== RESPONSIVE ==================== */

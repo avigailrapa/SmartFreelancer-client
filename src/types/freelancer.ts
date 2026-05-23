@@ -10,6 +10,7 @@ export interface Freelancer {
 
   experienceLevel: number;
   status: number;
+  email: string;
 
   specializationIds?: number[];
   specializationNames?: string[];

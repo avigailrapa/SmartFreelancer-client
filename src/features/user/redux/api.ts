@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { login, logout } from "./userSlice";
+import { login } from "./userSlice";
 import type { User } from "../../../types/user";
 
 export const userApi = createApi({
@@ -74,27 +74,12 @@ export const userApi = createApi({
         }
       },
     }),
-
-    // ---------- DELETE ----------
-    deleteAccount: builder.mutation({
-      query: () => ({ url: "/Auth/delete", method: "DELETE" }),
-      invalidatesTags: ["User"],
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        try {
-          await queryFulfilled;
-          dispatch(logout());
-        } catch (err) {
-          console.error("Delete account failed:", err);
-        }
-      },
-    }),
   }),
 });
 
 export const {
   useLoginMutation,
   useRegisterMutation,
-  useDeleteAccountMutation,
   useUpdateUserMutation,
   useGetUserByIdQuery,
 } = userApi;

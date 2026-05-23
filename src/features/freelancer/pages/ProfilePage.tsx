@@ -6,7 +6,8 @@ import {
   useUpdateFreelancerMutation,
 } from "../redux/api";
 import type { Freelancer } from "../../../types/freelancer";
-import "./Dashboard.css";
+// שינוי הייבוא לעבודה עם אובייקט styles מודולרי
+import styles from "./Dashboard.module.scss";
 
 export const ProfilePage = () => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -90,12 +91,14 @@ export const ProfilePage = () => {
     }
   };
 
-  if (isLoading) return <div className="loading">Loading Profile...</div>;
-  if (isError) return <div className="error">Error loading profile data.</div>;
+  if (isLoading)
+    return <div className={styles.loading}>Loading Profile...</div>;
+  if (isError)
+    return <div className={styles.error}>Error loading profile data.</div>;
 
   return (
-    <div className="card">
-      <div className="profile-header">
+    <div className={styles.card}>
+      <div className={styles.profileHeader}>
         <h1>Professional Profile</h1>
         <p>
           Welcome, {freelancer?.userName || "freelancer"}. Manage your
@@ -103,84 +106,86 @@ export const ProfilePage = () => {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="profile-form">
-        <div className="form-group">
+      <form onSubmit={handleSubmit} className={styles.profileForm}>
+        <div className={styles.formGroup}>
           <label>Name</label>
           {isEditing ? (
             <input
               type="text"
               name="userName"
-              className="form-control"
+              className={styles.formControl}
               value={formData.userName}
               onChange={handleChange}
               required
             />
           ) : (
-            <p className="display-text">
+            <p className={styles.displayText}>
               {freelancer?.userName || "No name set"}
             </p>
           )}
         </div>
 
         {/* Bio Section */}
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label>Professional Bio</label>
           {isEditing ? (
             <textarea
               name="bio"
-              className="form-control"
+              className={styles.formControl}
               value={formData.bio}
               onChange={handleChange}
               rows={4}
               required
             />
           ) : (
-            <p className="display-text">
+            <p className={styles.displayText}>
               {freelancer?.bio || "No biography provided."}
             </p>
           )}
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
+        <div className={styles.formRow}>
+          <div className={styles.formGroup}>
             <label>Hourly Rate ($)</label>
             {isEditing ? (
               <input
                 type="number"
                 name="hourlyRate"
-                className="form-control"
+                className={styles.formControl}
                 value={formData.hourlyRate}
                 onChange={handleChange}
                 required
               />
             ) : (
-              <p className="display-text">${freelancer?.hourlyRate}</p>
+              <p className={styles.displayText}>${freelancer?.hourlyRate}</p>
             )}
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label>Weekly Available Hours</label>
             {isEditing ? (
               <input
                 type="number"
                 name="availableHours"
-                className="form-control"
+                className={styles.formControl}
                 value={formData.availableHours}
                 onChange={handleChange}
                 required
               />
             ) : (
-              <p className="display-text">{freelancer?.availableHours} hours</p>
+              <p className={styles.displayText}>
+                {freelancer?.availableHours} hours
+              </p>
             )}
           </div>
         </div>
 
-        <div className="form-group">
+        <div className={styles.formGroup}>
           <label>Experience Level</label>
           {isEditing ? (
             <select
               name="experienceLevel"
-              className="form-control"
+              className={styles.formControl}
               value={formData.experienceLevel}
               onChange={handleChange}
             >
@@ -189,34 +194,34 @@ export const ProfilePage = () => {
               <option value="Expert">Expert</option>
             </select>
           ) : (
-            <p className="display-text">
+            <p className={styles.displayText}>
               {freelancer?.experienceLevel || "Not specified"}
             </p>
           )}
         </div>
 
         {/* Actions */}
-        <div className="actions-footer">
+        <div className={styles.actionsFooter}>
           {!isEditing ? (
             <button
               type="button"
-              className="btn-primary"
+              className={styles.btnPrimary}
               onClick={handleStartEdit}
             >
               Edit Profile
             </button>
           ) : (
-            <div className="button-group">
+            <div className={styles.buttonGroup}>
               <button
                 type="submit"
-                className="btn-primary"
+                className={styles.btnPrimary}
                 disabled={isUpdating}
               >
                 {isUpdating ? "Saving..." : "Save Changes"}
               </button>
               <button
                 type="button"
-                className="btn-cancel"
+                className={styles.btnCancel}
                 onClick={handleCancel}
               >
                 Cancel

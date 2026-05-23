@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"; // הוספנו useEffect
+import { useState, useEffect } from "react"; 
 import { useLoginMutation } from "../redux/api";
 import CloseIcon from "@mui/icons-material/Close";
 import "./Auth.css";
@@ -25,7 +25,7 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
   }, []);
 
   const handleClose = () => {
-    resetForm(); 
+    resetForm();
     onClose();
   };
 
@@ -76,7 +76,7 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
               type="email"
               className="fiverr-input"
               name="email"
-              autoComplete="none" 
+              autoComplete="none"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
               required
@@ -88,7 +88,7 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
               type="password"
               className="fiverr-input"
               name="password"
-              autoComplete="new-password" 
+              autoComplete="new-password"
               value={form.password}
               onChange={(e) => setForm({ ...form, password: e.target.value })}
               required

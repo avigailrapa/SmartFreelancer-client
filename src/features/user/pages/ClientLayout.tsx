@@ -1,23 +1,23 @@
-import { Link, Outlet } from "react-router-dom";
-import "../../freelancer/pages/Dashboard.css";
+import { Outlet,Link } from "react-router-dom";
+import styles from "../../freelancer/pages/Dashboard.module.scss";
 export const ClientLayout = () => {
   return (
-    <div className="dashboard-wrapper">
-      <nav className="sidebar">
-        <ul className="sidebar-nav">
+    <div className={styles.dashboardWrapper}>
+      <nav className={styles.sidebar}>
+        <ul className={styles.sidebarNav}>
           <li>
-            <Link to="client-profile" className="nav-link">
+            <Link to="client-profile" className={styles.navLink}>
               Account Profile
             </Link>
           </li>
           <li>
-            <Link to="client-jobs" className="nav-link">
-            My Jobs
+            <Link to="client-jobs" className={styles.navLink}>
+              My Jobs
             </Link>
           </li>
         </ul>
       </nav>
-      <main className="main-content">
+      <main className={styles.mainContent}>
         <Outlet />
       </main>
     </div>
