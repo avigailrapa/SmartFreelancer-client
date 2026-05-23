@@ -1,41 +1,56 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
-import "./Dashboard.css";
+import { NavLink, Outlet } from "react-router-dom";
+// מייבאים את הסטייל כאובייקט
+import styles from "./Dashboard.module.scss";
 
 export const FreelancerLayout = () => {
-  const location = useLocation();
-  const isActive = (path: string) => location.pathname.includes(path);
-
   return (
-    <div className="dashboard-wrapper">
-      <nav className="sidebar">
-        <ul className="sidebar-nav">
+    // משתמשים ב-styles.name במקום במחרוזת
+    <div className={styles.dashboardWrapper}>
+      <nav className={styles.sidebar}>
+        <ul className={styles.sidebarNav}>
           <li>
-            <Link
-              to="profile"
-              className={`nav-link ${isActive("profile") ? "active" : ""}`}
+            <NavLink 
+              to="profile" 
+              className={({ isActive }) => 
+                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+              }
             >
               Account Profile
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link
-              to="matching"
-              className={`nav-link ${isActive("matching") ? "active" : ""}`}
+            <NavLink 
+              to="matching" 
+              className={({ isActive }) => 
+                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+              }
             >
-              My Jobs
-            </Link>
+              Optimal Jobs
+            </NavLink>
           </li>
           <li>
-            <Link
-              to="my-proposals"
-              className={`nav-link ${isActive("my-proposals") ? "active" : ""}`}
+            <NavLink 
+              to="my-proposals" 
+              className={({ isActive }) => 
+                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+              }
             >
               My Proposals
-            </Link>
+            </NavLink>
+          </li>
+          <li>
+            <NavLink 
+              to="freelancer-jobs" 
+              className={({ isActive }) => 
+                isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+              }
+            >
+              My Jobs
+            </NavLink>
           </li>
         </ul>
       </nav>
-      <main className="main-content">
+      <main className={styles.mainContent}>
         <Outlet />
       </main>
     </div>

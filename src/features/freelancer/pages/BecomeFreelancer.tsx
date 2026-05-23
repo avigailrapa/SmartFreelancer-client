@@ -2,7 +2,7 @@ import { useState, useMemo } from "react";
 import { useGetAllCategoriesQuery } from "../../category/redux/api";
 import { useBecomeFreelancerMutation } from "../redux/api";
 import { useNavigate } from "react-router-dom";
-import "./BecomeFreelancer.css";
+import styles from "./BecomeFreelancer.module.scss";
 
 export const BecomeFreelancer = () => {
   const navigate = useNavigate();
@@ -97,9 +97,11 @@ export const BecomeFreelancer = () => {
     data.append("HourlyRate", formData.hourlyRate);
     data.append("AvailableHours", formData.availableHours);
     data.append("ExperienceLevel", formData.experienceLevel);
+
     if (formData.mainCategoryId)
       data.append("MainCategoryId", formData.mainCategoryId.toString());
     if (formData.imageFile) data.append("ImageFile", formData.imageFile);
+
     formData.selectedSpecs.forEach((id) =>
       data.append("SpecializationIds", id.toString()),
     );
@@ -119,23 +121,30 @@ export const BecomeFreelancer = () => {
   if (categoriesLoading) return <div className="loader">Loading...</div>;
 
   return (
-    <div className="become-freelancer-page">
-      <div className="wizard-container">
-        <div className="wizard-stepper">
+    <div className={styles.becomeFreelancerPage}>
+      <div className={styles.wizardContainer}>
+        <div className={styles.wizardStepper}>
           {[1, 2, 3, 4].map((s) => (
-            <div key={s} className={`step-item ${step >= s ? "active" : ""}`}>
+            <div
+              key={s}
+              className={`${styles.stepItem} ${step >= s ? styles.active : ""}`}
+            >
               <div className="step-number">{s}</div>
             </div>
           ))}
         </div>
 
-        <div className="wizard-card">
+        <div className={styles.wizardCard}>
           {step === 1 && (
             <div className="step-content">
               <h2>Personal Information</h2>
               <div className="image-section">
-                <div className="avatar-preview">
-                  {imagePreview ? <img src={imagePreview} /> : "📷"}
+                <div className={styles.avatarPreview}>
+                  {imagePreview ? (
+                    <img src={imagePreview} alt="Preview" />
+                  ) : (
+                    "📷"
+                  )}
                 </div>
                 <input
                   type="file"
@@ -143,7 +152,7 @@ export const BecomeFreelancer = () => {
                   hidden
                   onChange={handleImageChange}
                 />
-                <label htmlFor="img" className="upload-btn">
+                <label htmlFor="img" className={styles.uploadBtn}>
                   Upload Photo
                 </label>
               </div>
@@ -158,6 +167,7 @@ export const BecomeFreelancer = () => {
                   placeholder="Your name"
                 />
               </div>
+
               <div className="form-group">
                 <label>Experience Level</label>
                 <select
@@ -211,7 +221,7 @@ export const BecomeFreelancer = () => {
                 </div>
               </div>
               <button
-                className="primary-btn"
+                className={styles.primaryBtn}
                 disabled={
                   !formData.userName || !formData.bio || !formData.hourlyRate
                 }
@@ -225,11 +235,11 @@ export const BecomeFreelancer = () => {
           {step === 2 && (
             <div className="step-content">
               <h2>What is your main field?</h2>
-              <div className="category-grid">
+              <div className={styles.categoryGrid}>
                 {mainCategories.map((cat) => (
                   <div
                     key={cat.categoryId}
-                    className={`category-card ${formData.mainCategoryId === cat.categoryId ? "selected" : ""}`}
+                    className={`${styles.categoryCard} ${formData.mainCategoryId === cat.categoryId ? styles.selected : ""}`}
                     onClick={() =>
                       setFormData({
                         ...formData,
@@ -243,12 +253,15 @@ export const BecomeFreelancer = () => {
                   </div>
                 ))}
               </div>
-              <div className="actions">
-                <button className="secondary-btn" onClick={() => setStep(1)}>
+              <div className={styles.actions}>
+                <button
+                  className={styles.secondaryBtn}
+                  onClick={() => setStep(1)}
+                >
                   Back
                 </button>
                 <button
-                  className="primary-btn"
+                  className={styles.primaryBtn}
                   disabled={!formData.mainCategoryId}
                   onClick={() => setStep(3)}
                 >
@@ -277,12 +290,15 @@ export const BecomeFreelancer = () => {
                   </label>
                 ))}
               </div>
-              <div className="actions">
-                <button className="secondary-btn" onClick={() => setStep(2)}>
+              <div className={styles.actions}>
+                <button
+                  className={styles.secondaryBtn}
+                  onClick={() => setStep(2)}
+                >
                   Back
                 </button>
                 <button
-                  className="primary-btn"
+                  className={styles.primaryBtn}
                   disabled={formData.selectedSpecs.length === 0}
                   onClick={() => setStep(4)}
                 >
@@ -295,23 +311,26 @@ export const BecomeFreelancer = () => {
           {step === 4 && (
             <div className="step-content">
               <h2>Add Specific Skills (Max 15)</h2>
-              <div className="skills-cloud">
+              <div className={styles.skillsCloud}>
                 {availableSkills.map((skill) => (
                   <button
                     key={skill.categoryId}
-                    className={`skill-tag ${formData.selectedSkills.includes(skill.categoryId) ? "active" : ""}`}
+                    className={`${styles.skillTag} ${formData.selectedSkills.includes(skill.categoryId) ? styles.active : ""}`}
                     onClick={() => handleToggleSkill(skill.categoryId)}
                   >
                     {skill.name}
                   </button>
                 ))}
               </div>
-              <div className="actions">
-                <button className="secondary-btn" onClick={() => setStep(3)}>
+              <div className={styles.actions}>
+                <button
+                  className={styles.secondaryBtn}
+                  onClick={() => setStep(3)}
+                >
                   Back
                 </button>
                 <button
-                  className="primary-btn submit"
+                  className={`${styles.primaryBtn} submit`}
                   disabled={isSubmitting}
                   onClick={handleSubmit}
                 >

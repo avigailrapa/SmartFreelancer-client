@@ -3,7 +3,7 @@ import {
   useAcceptProposalMutation,
   useRejectProposalMutation,
 } from "../redux/api";
-import "./ProposalStyles.css";
+import styles from "./ProposalStyles.module.scss";
 
 interface JobProposalsProps {
   jobId: number;
@@ -38,58 +38,58 @@ export const JobProposals = ({ jobId }: JobProposalsProps) => {
     }
   };
 
-  if (isLoading) return <div className="loading">Loading proposals...</div>;
-
-  if (!proposals || proposals.length === 0) {
-    return <div className="no-proposals">No proposals received yet.</div>;
-  }
+  if (isLoading)
+    return <div className={styles.loading}>Loading proposals...</div>;
+  if (!proposals || proposals.length === 0)
+    return <div className={styles.noProposals}>No proposals received yet.</div>;
 
   return (
-    <div className="proposals-list">
+    <div className={styles.proposalsList}>
       <h3>Proposals ({proposals.length})</h3>
 
       {proposals.map((proposal) => (
-        <div key={proposal.id} className={`proposal-card ${proposal.status}`}>
-          <div className="proposal-header">
-            <div className="freelancer-info">
+        <div
+          key={proposal.id}
+          className={`${styles.proposalCard} ${styles[proposal.status]}`}
+        >
+          <div className={styles.proposalHeader}>
+            <div className={styles.freelancerInfo}>
               <h4>{proposal.freelancerName}</h4>
-              <span className={`status-badge ${proposal.status}`}>
+              <span
+                className={`${styles.statusBadge} ${styles[proposal.status]}`}
+              >
                 {proposal.status}
               </span>
             </div>
-            <div className="proposal-date">
+            <div className={styles.proposalDate}>
               {new Date(proposal.createdAt).toLocaleDateString()}
             </div>
           </div>
 
-          <div className="proposal-details">
-            <div className="pricing-info">
-              <div className="rate">Hourly Rate: ${proposal.hourlyRate}</div>
-              <div className="hours">
-                Estimated Hours: {proposal.estimatedHours}
-              </div>
-              <div className="total">
-                Total: ${proposal.totalEstimatedPrice.toFixed(2)}
-              </div>
-            </div>
-
-            <div className="proposal-message">
-              <h5>Cover Message:</h5>
-              <p>{proposal.message}</p>
+          <div className={styles.pricingInfo}>
+            <div>Hourly Rate: ${proposal.hourlyRate}</div>
+            <div>Estimated Hours: {proposal.estimatedHours}</div>
+            <div className={styles.total}>
+              Total: ${proposal.totalEstimatedPrice.toFixed(2)}
             </div>
           </div>
 
+          <div className={styles.proposalMessage}>
+            <h5>Cover Message:</h5>
+            <p>{proposal.message}</p>
+          </div>
+
           {proposal.status === "Pending" && (
-            <div className="proposal-actions">
+            <div className={styles.proposalActions}>
               <button
-                className="accept-btn"
+                className={styles.acceptBtn}
                 onClick={() => handleAccept(proposal.id)}
                 disabled={isAccepting}
               >
                 {isAccepting ? "Accepting..." : "Accept Proposal"}
               </button>
               <button
-                className="reject-btn"
+                className={styles.rejectBtn}
                 onClick={() => handleReject(proposal.id)}
                 disabled={isRejecting}
               >

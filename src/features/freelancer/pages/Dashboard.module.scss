@@ -1,3 +1,5 @@
+/* Dashboard.module.scss */
+
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap");
 
 :root {
@@ -18,36 +20,39 @@
   box-sizing: border-box;
 }
 
-/* ── Dashboard Wrapper Layout ──────────────────── */
-.dashboard-wrapper {
+/* Layout */
+
+.dashboardWrapper {
   display: flex;
   gap: 0;
+  width: 100%;
+  margin-top: 60px;
+  height: calc(100vh - 60px);
+  overflow: hidden;
 }
 
-/* ── Sidebar Navigation (צר מאוד) ────────────── */
 .sidebar {
   width: 220px;
+  flex-shrink: 0;
+  height: 100%;
   background: var(--white);
   border-right: 1px solid var(--border);
   padding: 20px 0;
-  min-height: 100vh;
   box-shadow: 2px 0 4px rgba(0, 0, 0, 0.03);
   font-family: "DM Sans", sans-serif;
-  position: sticky;
-  top: 0;
 }
 
-.sidebar-nav {
+.sidebarNav {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.sidebar-nav li {
+.navItem {
   position: relative;
 }
 
-.nav-link {
+.navLink {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -60,29 +65,30 @@
   border-left: 2px solid transparent;
 }
 
-.nav-link:hover {
+.navLink:hover {
   color: var(--green);
   background: rgba(29, 191, 115, 0.05);
   border-left-color: var(--green);
 }
 
-.nav-link.active {
+.active {
   color: var(--green);
   background: rgba(29, 191, 115, 0.08);
   border-left-color: var(--green);
   font-weight: 600;
 }
 
-/* ── Main Content Area ────────────────────────── */
-.main-content {
+.mainContent {
   flex: 1;
-  padding: 20px 40px 40px 40px;
+  min-width: 0;
+  padding: 80px 40px 40px;
   font-family: "DM Sans", sans-serif;
   background: var(--bg);
   overflow-y: auto;
 }
 
-/* ── Page wrapper ────────────────────────────── */
+/* Card */
+
 .card {
   max-width: 720px;
   margin: 0 auto;
@@ -94,15 +100,14 @@
   font-family: "DM Sans", sans-serif;
 }
 
-/* ── Header ──────────────────────────────────── */
-.profile-header {
+.profileHeader {
   background: linear-gradient(135deg, #1dbf73 0%, #0d9488 60%, #1a1a2e 100%);
   padding: 36px 36px 28px;
   position: relative;
   overflow: hidden;
 }
 
-.profile-header::after {
+.profileHeader::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -113,7 +118,7 @@
   );
 }
 
-.profile-header h1 {
+.profileHeader h1 {
   font-size: 24px;
   font-weight: 600;
   color: #fff;
@@ -122,7 +127,7 @@
   z-index: 1;
 }
 
-.profile-header p {
+.profileHeader p {
   font-size: 14px;
   color: rgba(255, 255, 255, 0.75);
   margin: 0;
@@ -130,16 +135,15 @@
   z-index: 1;
 }
 
-/* ── Form ────────────────────────────────────── */
-.profile-form {
+.profileForm {
   padding: 32px 36px;
 }
 
-.form-group {
+.formGroup {
   margin-bottom: 22px;
 }
 
-.form-group label {
+.formGroup label {
   display: block;
   font-size: 12px;
   font-weight: 600;
@@ -149,14 +153,13 @@
   margin-bottom: 8px;
 }
 
-.form-row {
+.formRow {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-/* ── Display mode ────────────────────────────── */
-.display-text {
+.displayText {
   background: var(--bg);
   border: 1.5px solid var(--border);
   padding: 12px 16px;
@@ -168,8 +171,7 @@
   line-height: 1.5;
 }
 
-/* ── Inputs ──────────────────────────────────── */
-.form-control {
+.formControl {
   width: 100%;
   padding: 12px 16px;
   border: 1.5px solid var(--border);
@@ -185,33 +187,23 @@
   resize: none;
 }
 
-.form-control:focus {
+.formControl:focus {
   border-color: var(--green);
   box-shadow: 0 0 0 3px rgba(29, 191, 115, 0.12);
 }
 
-select.form-control {
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 38px;
-}
-
-/* ── Actions ─────────────────────────────────── */
-.actions-footer {
+.actionsFooter {
   margin-top: 28px;
   padding-top: 24px;
   border-top: 1px solid var(--border);
 }
 
-.button-group {
+.buttonGroup {
   display: flex;
   gap: 12px;
 }
 
-.btn-primary {
+.btnPrimary {
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -229,17 +221,17 @@ select.form-control {
     transform 0.1s;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btnPrimary:hover:not(:disabled) {
   background: var(--green-dark);
   transform: translateY(-1px);
 }
 
-.btn-primary:disabled {
+.btnPrimary:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.btn-cancel {
+.btnCancel {
   display: inline-flex;
   align-items: center;
   padding: 11px 24px;
@@ -254,13 +246,12 @@ select.form-control {
   transition: all 0.2s;
 }
 
-.btn-cancel:hover {
+.btnCancel:hover {
   border-color: #9ca3af;
   color: var(--text-primary);
   background: var(--bg);
 }
 
-/* ── States ──────────────────────────────────── */
 .loading,
 .error {
   display: flex;
@@ -276,15 +267,14 @@ select.form-control {
   color: #ef4444;
 }
 
-/* ── Responsive ──────────────────────────────── */
 @media (max-width: 1200px) {
-  .main-content {
+  .mainContent {
     padding: 24px;
   }
 }
 
 @media (max-width: 600px) {
-  .main-content {
+  .mainContent {
     padding: 16px;
   }
 
@@ -292,19 +282,19 @@ select.form-control {
     border-radius: 8px;
   }
 
-  .profile-header {
+  .profileHeader {
     padding: 24px 20px;
   }
 
-  .profile-form {
+  .profileForm {
     padding: 24px 20px;
   }
 
-  .form-row {
+  .formRow {
     grid-template-columns: 1fr;
   }
 
-  .button-group {
+  .buttonGroup {
     flex-direction: column;
   }
 }

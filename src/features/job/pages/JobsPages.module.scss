@@ -1,0 +1,203 @@
+.wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+.header {
+  margin-bottom: 40px;
+
+  h1 {
+    font-size: 32px;
+    color: #404145;
+    margin: 0 0 8px;
+    line-height: 1.2;
+    padding-top: 7vw;
+  }
+
+  p {
+    color: #74767e;
+    margin: 0;
+    font-size: 15px;
+  }
+}
+
+.loader,
+.error {
+  text-align: center;
+  padding: 60px 0;
+  font-size: 15px;
+  color: #74767e;
+}
+
+.error {
+  color: #e53e3e;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  background: #ffffff;
+  border: 1px solid #e4e5e7;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition:
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+}
+
+.cardTop {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  background: #1dbf73;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.clientInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.clientName {
+  display: block;
+  font-weight: 700;
+  color: #404145;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardBody {
+  padding: 0 15px 18px;
+  flex-grow: 1;
+}
+
+.jobTitle {
+  font-size: 18px;
+  color: #222325;
+  margin: 0 0 10px;
+  line-height: 1.4;
+}
+
+.jobDesc {
+  color: #62646a;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tag {
+  display: inline-block;
+  background: #efeff0;
+  color: #404145;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.cardFooter {
+  padding: 14px 15px;
+  border-top: 1px solid #efeff0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.priceLabel {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #b5b6ba;
+}
+
+.priceValue {
+  font-size: 17px;
+  font-weight: 700;
+  color: #404145;
+
+  span {
+    font-size: 13px;
+    font-weight: 400;
+    color: #74767e;
+  }
+}
+
+.applyBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: #1dbf73;
+  border: 1px solid #1dbf73;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background 0.2s,
+    color 0.2s;
+
+  &:hover:not(:disabled) {
+    background: #1dbf73;
+    color: #fff;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@media (max-width: 600px) {
+  .wrapper {
+    padding: 24px 12px;
+  }
+
+  .header h1 {
+    font-size: 24px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

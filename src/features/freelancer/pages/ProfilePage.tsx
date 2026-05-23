@@ -6,7 +6,6 @@ import {
   useUpdateFreelancerMutation,
 } from "../redux/api";
 import type { Freelancer } from "../../../types/freelancer";
-// שינוי הייבוא לעבודה עם אובייקט styles מודולרי
 import styles from "./Dashboard.module.scss";
 
 export const ProfilePage = () => {

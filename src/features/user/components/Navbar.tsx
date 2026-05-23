@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../../app/store";
 import { logout, toggleMode } from "../redux/userSlice";
-import "./NavBar.css";
+import styles from "./NavBar.module.scss";
 
 interface NavBarProps {
   onLoginClick: () => void;
@@ -34,51 +34,48 @@ export const NavBar = ({ onLoginClick, onRegisterClick }: NavBarProps) => {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <Link to="/" className="logo">
-          SkillBridge<span className="logo-dot">.</span>
+    <nav className={styles.navbar}>
+      <div className={styles.container}>
+        <Link to="/" className={styles.logo}>
+          SkillBridge<span className={styles.logoDot}>.</span>
         </Link>
-        <div className="navbar-right">
-          <Link to="/jobs" className="nav-link">
+
+        <div className={styles.right}>
+          <Link to="/jobs" className={styles.navLink}>
             Browse Jobs
           </Link>
-
-          <Link to="/freelancers" className="nav-link">
+          <Link to="/freelancers" className={styles.navLink}>
             Find Talent
           </Link>
 
           {isAuthenticated && !hasFreelancerProfile && (
-            <Link to="/become-a-seller" className="nav-link become-seller-link">
+            <Link to="/become-a-seller" className={styles.navLink}>
               Become a Seller
             </Link>
           )}
 
           {!isAuthenticated ? (
             <>
-              <span
-                onClick={onLoginClick}
-                className="nav-link"
-                style={{ cursor: "pointer" }}
-              >
+              <span onClick={onLoginClick} className={styles.navLink}>
                 Sign In
               </span>
-              <button onClick={onRegisterClick} className="join-btn">
-                {" "}
-                Join{" "}
+              <button onClick={onRegisterClick} className={styles.joinBtn}>
+                Join
               </button>
             </>
           ) : (
-            <div className="nav-profile-section">
-              <div className="profile-dropdown-container">
-                <div className="profile-avatar-circle">
+            <div className={styles.profileSection}>
+              <div className={styles.dropdownContainer}>
+                <div className={styles.avatar}>
                   {user?.fullName?.[0].toUpperCase()}
                 </div>
 
-                <div className="profile-dropdown-menu">
-                  <div className="dropdown-header">
-                    <span className="dropdown-name">{user?.fullName}</span>
-                    <span className="dropdown-type">
+                <div className={styles.dropdownMenu}>
+                  <div className={styles.dropdownHeader}>
+                    <span className={styles.dropdownName}>
+                      {user?.fullName}
+                    </span>
+                    <span className={styles.dropdownType}>
                       {isSellingMode ? "Freelancer Mode" : "Client Mode"}
                     </span>
                   </div>
@@ -86,7 +83,7 @@ export const NavBar = ({ onLoginClick, onRegisterClick }: NavBarProps) => {
                   {hasFreelancerProfile && (
                     <button
                       onClick={handleToggle}
-                      className="dropdown-item switch-btn"
+                      className={styles.dropdownItem}
                     >
                       Switch to {isSellingMode ? "Buying" : "Selling"}
                     </button>
@@ -98,14 +95,14 @@ export const NavBar = ({ onLoginClick, onRegisterClick }: NavBarProps) => {
                         ? "/freelancer-dashboard"
                         : "/client-dashboard"
                     }
-                    className="dropdown-item"
+                    className={styles.dropdownItem}
                   >
                     Dashboard
                   </Link>
 
                   <button
                     onClick={handleLogout}
-                    className="dropdown-item logout-link"
+                    className={styles.dropdownItem}
                   >
                     Log Out
                   </button>

@@ -1,9 +1,9 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetAllFreelancersQuery } from "../features/freelancer/redux/api";
-import { useGetAllCategoriesQuery } from "../features/category/redux/api";
+import { useGetAllFreelancersQuery } from "../freelancer/redux/api";
+import { useGetAllCategoriesQuery } from "../category/redux/api";
 import SearchIcon from "@mui/icons-material/Search";
-import "./HomePage.css";
+import styles from "./HomePage.module.scss";
 
 export const HomePage = () => {
   const navigate = useNavigate();
@@ -27,24 +27,18 @@ export const HomePage = () => {
     const term = searchTerm.toLowerCase().trim();
     const suggestionsSet = new Set<string>();
 
-    if (categories) {
-      categories.forEach((cat) => {
-        if (cat.name?.toLowerCase().includes(term)) {
-          suggestionsSet.add(cat.name);
-        }
-      });
-    }
+    categories?.forEach((cat) => {
+      if (cat.name?.toLowerCase().includes(term)) suggestionsSet.add(cat.name);
+    });
 
-    if (freelancers) {
-      freelancers.forEach((f) => {
-        f.specializationNames?.forEach((s: string) => {
-          if (s.toLowerCase().includes(term)) suggestionsSet.add(s);
-        });
-        f.skillNames?.forEach((s: string) => {
-          if (s.toLowerCase().includes(term)) suggestionsSet.add(s);
-        });
+    freelancers?.forEach((f) => {
+      f.specializationNames?.forEach((s: string) => {
+        if (s.toLowerCase().includes(term)) suggestionsSet.add(s);
       });
-    }
+      f.skillNames?.forEach((s: string) => {
+        if (s.toLowerCase().includes(term)) suggestionsSet.add(s);
+      });
+    });
 
     return Array.from(suggestionsSet).slice(0, 8);
   }, [searchTerm, categories, freelancers]);
@@ -70,16 +64,16 @@ export const HomePage = () => {
   }, []);
 
   return (
-    <div className="home-wrapper">
-      <section className="fiverr-hero-dark">
-        <div className="hero-content-wrapper">
-          <h1 className="hero-main-title">
+    <div className={styles.wrapper}>
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>
             Our professionals <br /> will take it from here
           </h1>
 
-          <div className="search-and-popular-container">
-            <div className="search-wrapper-relative" ref={searchRef}>
-              <div className="fiverr-search-bar">
+          <div ref={searchRef}>
+            <div className={styles.searchWrapper}>
+              <div className={styles.searchBar}>
                 <input
                   type="text"
                   placeholder="What service are you looking for?"
@@ -94,38 +88,37 @@ export const HomePage = () => {
                   onFocus={() => setShowSuggestions(true)}
                 />
                 <button
-                  className="search-submit-btn"
+                  className={styles.searchBtn}
                   onClick={() => handleSearchNavigation(searchTerm)}
                 >
                   <SearchIcon sx={{ fontSize: 24 }} />
                 </button>
               </div>
 
-              {/* רשימת הצעות נקייה */}
               {showSuggestions && allSuggestions.length > 0 && (
-                <div className="home-search-suggestions">
+                <div className={styles.suggestions}>
                   {allSuggestions.map((suggestion, index) => (
                     <div
                       key={index}
-                      className="suggestion-row-fiverr"
+                      className={styles.suggestionRow}
                       onClick={() => handleSearchNavigation(suggestion)}
                     >
-                      <span className="suggest-text-main">{suggestion}</span>
+                      <span>{suggestion}</span>
                     </div>
                   ))}
                 </div>
               )}
             </div>
 
-            <div className="hero-popular-categories">
-              <span className="popular-label">Popular:</span>
+            <div className={styles.popularCategories}>
+              <span>Popular:</span>
               {categories
                 ?.filter((c) => !c.parentCategoryId)
                 .slice(0, 4)
                 .map((cat) => (
                   <button
                     key={cat.categoryId}
-                    className="fiverr-pill"
+                    className={styles.pill}
                     onClick={() => handleSearchNavigation(cat.name || "")}
                   >
                     {cat.name}
@@ -136,31 +129,33 @@ export const HomePage = () => {
         </div>
       </section>
 
-      <section className="results-container">
-        <div className="container-inner">
-          <h2 className="results-heading">Top Rated Professionals</h2>
-          <div className="fiverr-grid">
+      <section className={styles.results}>
+        <div className={styles.resultsInner}>
+          <h2 className={styles.resultsHeading}>Top Rated Professionals</h2>
+          <div className={styles.grid}>
             {topFreelancers.map((f) => (
               <div
                 key={f.freelancerId}
-                className="fiverr-card"
+                className={styles.card}
                 onClick={() => navigate("/freelancers")}
               >
-                <div className="card-image-placeholder">{f.userName?.[0]}</div>
-                <div className="card-info">
-                  <div className="seller-name">{f.userName}</div>
-                  <div className="skills-tags-row">
+                <div className={styles.cardImagePlaceholder}>
+                  {f.userName?.[0]}
+                </div>
+                <div className={styles.cardInfo}>
+                  <div className={styles.sellerName}>{f.userName}</div>
+                  <div>
                     {f.skillNames?.slice(0, 2).map((s: string) => (
-                      <span key={s} className="tag">
+                      <span key={s} className={styles.tag}>
                         {s}
                       </span>
                     ))}
                   </div>
-                  <div className="card-footer">
-                    <span className="price-value">From ${f.hourlyRate}</span>
-                    <span className="rating">
-                      ⭐ {f.averageStars?.toFixed(1) || "5.0"}
+                  <div className={styles.cardFooter}>
+                    <span className={styles.priceValue}>
+                      From ${f.hourlyRate}
                     </span>
+                    <span>⭐ {f.averageStars?.toFixed(1) || "5.0"}</span>
                   </div>
                 </div>
               </div>

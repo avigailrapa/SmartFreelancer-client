@@ -1,0 +1,404 @@
+// ─── Design Tokens ───────────────────────────────────────────
+$brand-dark:    #1a1f2e;
+$brand-green:   #2ecc8a;
+$brand-green-light: #e8faf2;
+$accent:        #3b82f6;
+$accent-light:  #eff6ff;
+$gray-50:       #f8fafc;
+$gray-100:      #f1f5f9;
+$gray-200:      #e2e8f0;
+$gray-400:      #94a3b8;
+$gray-600:      #475569;
+$gray-900:      #0f172a;
+$radius-sm:     6px;
+$radius-md:     12px;
+$radius-lg:     20px;
+$shadow-card:   0 4px 24px rgba(0,0,0,0.07);
+$shadow-hover:  0 8px 32px rgba(0,0,0,0.12);
+$transition:    all 0.2s ease;
+
+// ─── Mixins ───────────────────────────────────────────────────
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin input-base {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid $gray-200;
+  border-radius: $radius-sm;
+  font-size: 14px;
+  color: $gray-900;
+  background: white;
+  transition: $transition;
+  outline: none;
+  box-sizing: border-box;
+
+  &::placeholder { color: $gray-400; }
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.1);
+  }
+}
+
+// ─── Page Shell ───────────────────────────────────────────────
+.becomeFreelancerPage {
+  background: $gray-50;
+  min-height: 100vh;
+  padding: 48px 20px 80px; // ← שנה ל:
+  padding: 80px 20px 80px; // יותר מקום מלמעלה
+}
+// ─── Container ────────────────────────────────────────────────
+.wizardContainer {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+// ─── Stepper ──────────────────────────────────────────────────
+.wizardStepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 36px;
+}
+
+.stepItem {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  // Connector line between steps
+  &:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 19px;
+    left: calc(50% + 20px);
+    width: 80px;
+    height: 2px;
+    background: $gray-200;
+    transition: background 0.4s ease;
+  }
+
+  &.active:not(:last-child)::after {
+    background: $brand-green;
+  }
+
+  // The circle
+  :global(.step-number) {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid $gray-200;
+    background: white;
+    color: $gray-400;
+    font-size: 14px;
+    font-weight: 600;
+    @include flex-center;
+    transition: $transition;
+    position: relative;
+    z-index: 2;
+  }
+
+  &.active :global(.step-number) {
+    background: $brand-green;
+    border-color: $brand-green;
+    color: white;
+    box-shadow: 0 0 0 4px rgba(46,204,138,0.18);
+  }
+}
+
+// ─── Card ─────────────────────────────────────────────────────
+.wizardCard {
+  background: white;
+  border-radius: $radius-lg;
+  padding: 40px 44px;
+  box-shadow: $shadow-card;
+  border: 1px solid $gray-200;
+
+  // Global styles inside the card (non-module classes from TSX)
+  :global {
+    h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: $brand-dark;
+      margin: 0 0 28px;
+      letter-spacing: -0.3px;
+    }
+
+    .step-content {
+      animation: fadeSlide 0.25s ease both;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .image-section {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: $gray-600;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      textarea,
+      select {
+        @include input-base;
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 90px;
+        line-height: 1.5;
+      }
+
+      select {
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 14px center;
+        padding-right: 36px;
+      }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 4px 0 24px;
+      max-height: 320px;
+      overflow-y: auto;
+      padding-right: 4px;
+
+      &::-webkit-scrollbar { width: 4px; }
+      &::-webkit-scrollbar-track { background: $gray-100; border-radius: 4px; }
+      &::-webkit-scrollbar-thumb { background: $gray-200; border-radius: 4px; }
+    }
+
+    .check-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border: 1.5px solid $gray-200;
+      border-radius: $radius-sm;
+      cursor: pointer;
+      font-size: 14px;
+      color: $gray-600;
+      transition: $transition;
+
+      &:has(input:checked) {
+        border-color: $accent;
+        background: $accent-light;
+        color: $accent;
+        font-weight: 500;
+      }
+
+      &:hover:not(:has(input:disabled)) {
+        border-color: $gray-400;
+        background: $gray-50;
+      }
+
+      input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: $accent;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+    }
+  }
+}
+
+// ─── Avatar ───────────────────────────────────────────────────
+.avatarPreview {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: $gray-100;
+  margin: 0 auto 12px;
+  @include flex-center;
+  overflow: hidden;
+  border: 2.5px dashed $gray-200;
+  font-size: 28px;
+  transition: $transition;
+
+  &:hover { border-color: $accent; }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.uploadBtn {
+  display: inline-block;
+  color: $accent;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 16px;
+  border-radius: 99px;
+  background: $accent-light;
+  transition: $transition;
+  letter-spacing: 0.1px;
+
+  &:hover { background: darken($accent-light, 4%); }
+}
+
+// ─── Category Grid ────────────────────────────────────────────
+.categoryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin: 4px 0 28px;
+}
+
+.categoryCard {
+  padding: 18px 16px;
+  border: 1.5px solid $gray-200;
+  border-radius: $radius-md;
+  cursor: pointer;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray-600;
+  background: white;
+  transition: $transition;
+  line-height: 1.3;
+
+  &:hover {
+    border-color: $gray-400;
+    background: $gray-50;
+    transform: translateY(-1px);
+    box-shadow: $shadow-hover;
+  }
+
+  &.selected {
+    border-color: $brand-green;
+    background: $brand-green-light;
+    color: darken($brand-green, 20%);
+    font-weight: 600;
+    box-shadow: 0 0 0 3px rgba(46,204,138,0.15);
+  }
+}
+
+// ─── Skills Cloud ─────────────────────────────────────────────
+.skillsCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 28px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px 2px;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: $gray-100; border-radius: 4px; }
+  &::-webkit-scrollbar-thumb { background: $gray-200; border-radius: 4px; }
+}
+
+.skillTag {
+  padding: 7px 16px;
+  border-radius: 99px;
+  border: 1.5px solid $gray-200;
+  background: white;
+  font-size: 13px;
+  font-weight: 500;
+  color: $gray-600;
+  cursor: pointer;
+  transition: $transition;
+
+  &:hover { border-color: $gray-400; background: $gray-50; }
+
+  &.active {
+    background: $brand-dark;
+    color: white;
+    border-color: $brand-dark;
+  }
+}
+
+// ─── Buttons ──────────────────────────────────────────────────
+.primaryBtn {
+  background: $brand-green;
+  color: white;
+  border: none;
+  padding: 13px 28px;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: $transition;
+  letter-spacing: 0.1px;
+
+  &:hover:not(:disabled) {
+    background: darken($brand-green, 8%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(46,204,138,0.35);
+  }
+
+  &:disabled {
+    background: $gray-200;
+    color: $gray-400;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+.secondaryBtn {
+  background: white;
+  border: 1.5px solid $gray-200;
+  color: $gray-600;
+  padding: 13px 28px;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: $transition;
+
+  &:hover {
+    border-color: $gray-400;
+    background: $gray-50;
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid $gray-100;
+  margin-top: 8px;
+
+  .primaryBtn { min-width: 120px; }
+  .secondaryBtn { min-width: 100px; }
+}

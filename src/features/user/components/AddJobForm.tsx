@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useCreateJobMutation } from "../../job/redux/api";
 import { useGetAllCategoriesQuery } from "../../category/redux/api";
-import "./AddJobForm.css";
+import styles from "./AddJobForm.module.scss";
 
 interface AddJobFormProps {
   onJobAdded: () => void;
@@ -10,7 +10,8 @@ interface AddJobFormProps {
 
 export const AddJobForm = ({ onJobAdded, onCancel }: AddJobFormProps) => {
   const [createJob, { isLoading, error }] = useCreateJobMutation();
-  const { data: categories = [], isLoading: categoriesLoading } = useGetAllCategoriesQuery();
+  const { data: categories = [], isLoading: categoriesLoading } =
+    useGetAllCategoriesQuery();
 
   const [form, setForm] = useState({
     title: "",
@@ -22,27 +23,34 @@ export const AddJobForm = ({ onJobAdded, onCancel }: AddJobFormProps) => {
     requiredSkillIds: [] as number[],
   });
 
-  // כל ה-skills וה-specializations של הקטגוריה הנבחרת ביחד
   const availableSkills = useMemo(() => {
     const main = categories.find((c) => c.categoryId === form.mainCategoryId);
     if (!main) return [];
-
     const all: { categoryId: number; name: string }[] = [];
     main.subCategories?.forEach((spec) => {
-      all.push(spec); // specialization
-      spec.subCategories?.forEach((skill) => {
-        all.push(skill); // skill
-      });
+      all.push(spec);
+      spec.subCategories?.forEach((skill) => all.push(skill));
     });
     return Array.from(new Map(all.map((s) => [s.categoryId, s])).values());
   }, [categories, form.mainCategoryId]);
 
+  const mainCategories = useMemo(
+    () => categories.filter((c) => c.type === "Main"),
+    [categories],
+  );
+
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
   ) => {
     const { name, value } = e.target;
     if (name === "mainCategoryId") {
-      setForm({ ...form, mainCategoryId: parseInt(value) || 0, requiredSkillIds: [] });
+      setForm({
+        ...form,
+        mainCategoryId: parseInt(value) || 0,
+        requiredSkillIds: [],
+      });
     } else {
       setForm({
         ...form,
@@ -82,37 +90,57 @@ export const AddJobForm = ({ onJobAdded, onCancel }: AddJobFormProps) => {
     }
   };
 
-  const mainCategories = useMemo(() => categories.filter((c) => c.type === "Main"), [categories]);
-
   return (
-    <div className="add-job-form-container">
-      <div className="add-job-modal">
-        <div className="form-header">
+    <div className={styles.container}>
+      <div className={styles.modal}>
+        <div className={styles.header}>
           <h3>Create New Job</h3>
-          <button className="close-btn" onClick={onCancel}>✕</button>
+          <button className={styles.closeBtn} onClick={onCancel}>
+            ✕
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="add-job-form">
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
             <label htmlFor="title">Job Title *</label>
-            <input type="text" id="title" name="title" className="form-input"
+            <input
+              type="text"
+              id="title"
+              name="title"
               placeholder="e.g., Build React Dashboard"
-              value={form.title} onChange={handleChange} required />
+              value={form.title}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label htmlFor="description">Description *</label>
-            <textarea id="description" name="description" className="form-textarea"
+            <textarea
+              id="description"
+              name="description"
               placeholder="Describe what you need to be done..."
-              value={form.description} onChange={handleChange} rows={4} required />
+              value={form.description}
+              onChange={handleChange}
+              rows={4}
+              required
+            />
           </div>
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
               <label htmlFor="mainCategoryId">Category *</label>
-              <select id="mainCategoryId" name="mainCategoryId" className="form-select"
-                value={form.mainCategoryId} onChange={handleChange} required disabled={categoriesLoading}>
-                <option value="">{categoriesLoading ? "Loading..." : "Select a category"}</option>
+              <select
+                id="mainCategoryId"
+                name="mainCategoryId"
+                value={form.mainCategoryId}
+                onChange={handleChange}
+                required
+                disabled={categoriesLoading}
+              >
+                <option value="">
+                  {categoriesLoading ? "Loading..." : "Select a category"}
+                </option>
                 {mainCategories.map((category) => (
                   <option key={category.categoryId} value={category.categoryId}>
                     {category.name}
@@ -121,24 +149,34 @@ export const AddJobForm = ({ onJobAdded, onCancel }: AddJobFormProps) => {
               </select>
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="requiredHours">Required Hours *</label>
-              <input type="number" id="requiredHours" name="requiredHours" className="form-input"
-                placeholder="Hours needed" value={form.requiredHours}
-                onChange={handleChange} min="1" required />
+              <input
+                type="number"
+                id="requiredHours"
+                name="requiredHours"
+                placeholder="Hours needed"
+                value={form.requiredHours}
+                onChange={handleChange}
+                min="1"
+                required
+              />
             </div>
           </div>
 
-          {/* Skills - מופיע רק אחרי בחירת קטגוריה */}
           {form.mainCategoryId > 0 && (
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label>Required Skills</label>
-              <div className="skills-cloud">
+              <div className={styles.skillsCloud}>
                 {availableSkills.map((skill) => (
                   <button
                     key={skill.categoryId}
                     type="button"
-                    className={`skill-tag ${form.requiredSkillIds.includes(skill.categoryId) ? "active" : ""}`}
+                    className={`${styles.skillTag} ${
+                      form.requiredSkillIds.includes(skill.categoryId)
+                        ? styles.active
+                        : ""
+                    }`}
                     onClick={() => handleToggleSkill(skill.categoryId)}
                   >
                     {skill.name}
@@ -148,34 +186,57 @@ export const AddJobForm = ({ onJobAdded, onCancel }: AddJobFormProps) => {
             </div>
           )}
 
-          <div className="form-row">
-            <div className="form-group">
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
               <label htmlFor="maxPayPerHour">Budget (per hour) *</label>
-              <input type="number" id="maxPayPerHour" name="maxPayPerHour" className="form-input"
-                placeholder="$" value={form.maxPayPerHour}
-                onChange={handleChange} min="1" step="0.01" required />
+              <input
+                type="number"
+                id="maxPayPerHour"
+                name="maxPayPerHour"
+                placeholder="$"
+                value={form.maxPayPerHour}
+                onChange={handleChange}
+                min="1"
+                step="0.01"
+                required
+              />
             </div>
 
-            <div className="form-group">
+            <div className={styles.formGroup}>
               <label htmlFor="deadline">Deadline *</label>
-              <input type="date" id="deadline" name="deadline" className="form-input"
-                value={form.deadline} onChange={handleChange} required />
+              <input
+                type="date"
+                id="deadline"
+                name="deadline"
+                value={form.deadline}
+                onChange={handleChange}
+                required
+              />
             </div>
           </div>
 
           {error && (
-            <div className="error-message">
+            <div className={styles.errorMessage}>
               {typeof error === "object" && "data" in error
                 ? (error.data as any)?.message || "Failed to create job"
                 : "Failed to create job"}
             </div>
           )}
 
-          <div className="form-actions">
-            <button type="button" className="btn-cancel" onClick={onCancel} disabled={isLoading}>
+          <div className={styles.formActions}>
+            <button
+              type="button"
+              className={styles.cancelBtn}
+              onClick={onCancel}
+              disabled={isLoading}
+            >
               Cancel
             </button>
-            <button type="submit" className="btn-submit" disabled={isLoading}>
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={isLoading}
+            >
               {isLoading ? "Creating..." : "Create Job"}
             </button>
           </div>

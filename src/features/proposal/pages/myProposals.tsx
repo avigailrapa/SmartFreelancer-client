@@ -2,7 +2,7 @@ import {
   useGetMyProposalsQuery,
   useDeleteProposalMutation,
 } from "../../proposal/redux/api";
-import "./MyProposals.css";
+import styles from "./MyProposals.module.scss";
 
 export const MyProposals = () => {
   const { data: proposals, isLoading, isError } = useGetMyProposalsQuery();
@@ -12,33 +12,37 @@ export const MyProposals = () => {
   if (isError) return <p>Something went wrong</p>;
 
   return (
-    <div className="my-proposals-section">
+    <div className={styles.section}>
       <h3>My Proposals</h3>
 
-      {proposals?.length === 0 && <p className="empty">No proposals yet</p>}
+      {proposals?.length === 0 && (
+        <p className={styles.empty}>No proposals yet</p>
+      )}
 
       {proposals?.map((proposal) => (
-        <div key={proposal.id} className="proposal-card">
-          <div className="proposal-top">
-            <div className="proposal-info">
+        <div key={proposal.id} className={styles.card}>
+          <div className={styles.top}>
+            <div className={styles.info}>
               <h4>{proposal.jobTitle}</h4>
-              <p className="client-name">Client: {proposal.clientName}</p>
-              <p className="message">{proposal.message}</p>
-              <div className="proposal-meta">
-                <span> ${proposal.hourlyRate}/hr</span>
-                <span> {proposal.estimatedHours} hrs</span>
-                <span> Total: ${proposal.totalEstimatedPrice}</span>
+              <p className={styles.clientName}>Client: {proposal.clientName}</p>
+              <p className={styles.message}>{proposal.message}</p>
+              <div className={styles.meta}>
+                <span>${proposal.hourlyRate}/hr</span>
+                <span>{proposal.estimatedHours} hrs</span>
+                <span>Total: ${proposal.totalEstimatedPrice}</span>
                 <span>{new Date(proposal.createdAt).toLocaleDateString()}</span>
               </div>
             </div>
 
-            <div className="proposal-actions">
-              <span className={`status-badge ${proposal.status.toLowerCase()}`}>
+            <div className={styles.actions}>
+              <span
+                className={`${styles.badge} ${styles[proposal.status.toLowerCase()]}`}
+              >
                 {proposal.status}
               </span>
               {proposal.status === "Pending" && (
                 <button
-                  className="btn-withdraw"
+                  className={styles.withdrawBtn}
                   onClick={() => deleteProposal(proposal.id)}
                 >
                   Withdraw

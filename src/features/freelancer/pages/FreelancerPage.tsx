@@ -1,11 +1,12 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useGetAllFreelancersQuery } from "../redux/api";
-import "../../HomePage.css";
-import "./FreelancerPage.css";
 import { useClickOutside } from "../hooks/useClickOutside";
+import { FreelancerCard } from "../components/FreelancerCard";
+import styles from "./FreelancerPage.module.scss";
 
 const experienceLabels: Record<string, string> = {
+  All: "Experience Level",
   Junior: "Junior",
   MidLevel: "Mid-Level",
   Senior: "Senior",
@@ -38,7 +39,6 @@ export const FreelancersPage = () => {
 
   const filteredFreelancers = useMemo(() => {
     if (!freelancers) return [];
-
     const term = searchTerm.toLowerCase().trim();
 
     return freelancers.filter((f) => {
@@ -46,9 +46,6 @@ export const FreelancersPage = () => {
         !term ||
         f.userName?.toLowerCase().includes(term) ||
         f.mainCategoryName?.toLowerCase().includes(term) ||
-        f.specializationNames?.some((s: string) =>
-          s.toLowerCase().includes(term),
-        ) ||
         f.skillNames?.some((s: string) => s.toLowerCase().includes(term));
 
       const matchesPrice =
@@ -62,33 +59,27 @@ export const FreelancersPage = () => {
     });
   }, [freelancers, searchTerm, priceRange, selectedLevel]);
 
-  if (isLoading) return <div className="loading">Loading...</div>;
+  if (isLoading) return <div className={styles.loading}>Loading...</div>;
 
   return (
-    <div className="browse-wrapper">
-      <section className="filters-top-bar">
-        <div className="filter-group">
-          {/* EXPERIENCE */}
-          <div className="filter-item-wrapper" ref={expRef}>
-            <button
-              className={`filter-btn ${isExperienceOpen ? "active" : ""}`}
-              onClick={() => setIsExperienceOpen((prev) => !prev)}
-            >
-              {selectedLevel === "All"
-                ? "Experience"
-                : experienceLabels[selectedLevel]}{" "}
-              ▾
-            </button>
+    <div className={styles.browseContainer}>
+      <nav className={styles.filtersNav}>
+        <div className={styles.filtersInner}>
+          <div className={styles.filterButtonsGroup}>
+            <div className={styles.filterWrapper} ref={expRef}>
+              <button
+                className={`${styles.minimalBtn} ${selectedLevel !== "All" ? styles.activeFilter : ""}`}
+                onClick={() => setIsExperienceOpen(!isExperienceOpen)}
+              >
+                {experienceLabels[selectedLevel]} ▾
+              </button>
 
-            {isExperienceOpen && (
-              <div className="dropdown-menu">
-                {["All", "Junior", "MidLevel", "Senior", "Expert"].map(
-                  (level) => (
+              {isExperienceOpen && (
+                <div className={styles.dropdownPanel}>
+                  {Object.keys(experienceLabels).map((level) => (
                     <div
                       key={level}
-                      className={`dropdown-item ${
-                        selectedLevel === level ? "selected" : ""
-                      }`}
+                      className={`${styles.dropdownOption} ${selectedLevel === level ? styles.selected : ""}`}
                       onClick={() => {
                         setSelectedLevel(level);
                         setIsExperienceOpen(false);
@@ -96,135 +87,83 @@ export const FreelancersPage = () => {
                     >
                       {level === "All" ? "All Levels" : experienceLabels[level]}
                     </div>
-                  ),
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="filter-item-wrapper" ref={budgetRef}>
-            <button
-              className={`filter-btn ${isBudgetOpen ? "active" : ""}`}
-              onClick={() => setIsBudgetOpen((prev) => !prev)}
-            >
-              Budget (${priceRange[0]}–${priceRange[1]}) ▾
-            </button>
-
-            {isBudgetOpen && (
-              <div className="budget-popover">
-                <div className="popover-header">
-                  Price:{" "}
-                  <strong>
-                    ${priceRange[0]} – ${priceRange[1]}
-                  </strong>
+                  ))}
                 </div>
+              )}
+            </div>
 
-                <div className="range-track">
-                  <input
-                    type="range"
-                    min="20"
-                    max="1500"
-                    step="10"
-                    value={priceRange[0]}
-                    onChange={(e) => {
-                      const val = Math.min(
-                        Number(e.target.value),
-                        priceRange[1] - 10,
-                      );
-                      setPriceRange([val, priceRange[1]]);
-                    }}
-                    className="range-input range-lower"
-                  />
+            <div className={styles.filterWrapper} ref={budgetRef}>
+              <button
+                className={`${styles.minimalBtn} ${priceRange[0] > 20 || priceRange[1] < 1500 ? styles.activeFilter : ""}`}
+                onClick={() => setIsBudgetOpen(!isBudgetOpen)}
+              >
+                Budget ▾
+              </button>
+
+              {isBudgetOpen && (
+                <div
+                  className={`${styles.dropdownPanel} ${styles.budgetPanel}`}
+                >
+                  <div className={styles.budgetHeader}>
+                    Price Range:{" "}
+                    <strong>
+                      ${priceRange[0]} - ${priceRange[1]}
+                    </strong>
+                  </div>
                   <input
                     type="range"
                     min="20"
                     max="1500"
                     step="10"
                     value={priceRange[1]}
-                    onChange={(e) => {
-                      const val = Math.max(
-                        Number(e.target.value),
-                        priceRange[0] + 10,
-                      );
-                      setPriceRange([priceRange[0], val]);
-                    }}
-                    className="range-input range-upper"
+                    onChange={(e) =>
+                      setPriceRange([priceRange[0], Number(e.target.value)])
+                    }
+                    className={styles.budgetSlider}
                   />
-
-                  <div
-                    className="range-fill"
-                    style={{
-                      left: `${((priceRange[0] - 20) / (1500 - 20)) * 100}%`,
-                      right: `${
-                        100 - ((priceRange[1] - 20) / (1500 - 20)) * 100
-                      }%`,
-                    }}
-                  />
+                  <div className={styles.budgetActions}>
+                    <button
+                      className={styles.clearBtnText}
+                      onClick={() => setPriceRange([20, 1500])}
+                    >
+                      Clear
+                    </button>
+                    <button
+                      className={styles.applyBtnSmall}
+                      onClick={() => setIsBudgetOpen(false)}
+                    >
+                      Apply
+                    </button>
+                  </div>
                 </div>
+              )}
+            </div>
 
-                <button
-                  className="apply-btn"
-                  onClick={() => setIsBudgetOpen(false)}
-                >
-                  Apply
-                </button>
-              </div>
+            {(selectedLevel !== "All" ||
+              priceRange[0] > 20 ||
+              priceRange[1] < 1500) && (
+              <button
+                className={styles.clearAllLink}
+                onClick={() => {
+                  setSelectedLevel("All");
+                  setPriceRange([20, 1500]);
+                }}
+              >
+                Clear All
+              </button>
             )}
           </div>
 
-          <button
-            className="clear-btn"
-            onClick={() => {
-              setPriceRange([20, 1500]);
-              setSelectedLevel("All");
-            }}
-          >
-            Clear Filters
-          </button>
+          <div className={styles.resultsInfo}>
+            <strong>{filteredFreelancers.length}</strong> services available
+          </div>
         </div>
+      </nav>
 
-        <div className="results-count">
-          {filteredFreelancers.length} results
-        </div>
-      </section>
-
-      <main className="results-area">
-        <div className="fiverr-grid">
-          {filteredFreelancers.map((f) => (
-            <div key={f.freelancerId} className="fiverr-card">
-              <div className="card-image-container">
-                <div className="card-image-placeholder">
-                  <span>{f.userName?.[0]}</span>
-                </div>
-              </div>
-
-              <div className="card-content">
-                <div className="seller-info-row">
-                  <div className="seller-avatar-mini">{f.userName?.[0]}</div>
-                  <div>
-                    <div className="seller-name">{f.userName}</div>
-                    <div className="experience-badge">
-                      {experienceLabels[f.experienceLevel]}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="card-title">
-                  I will provide professional {f.mainCategoryName || "services"}
-                </p>
-
-                <div className="card-rating">
-                  ★ {f.averageStars?.toFixed(1) || "5.0"}
-                </div>
-              </div>
-
-              <div className="card-footer">
-                <span>From</span>
-                <strong>${f.hourlyRate}</strong>
-              </div>
-            </div>
-          ))}
-        </div>
+      <main className={styles.cardsGridLayout}>
+        {filteredFreelancers.map((f) => (
+          <FreelancerCard key={f.freelancerId} f={f} />
+        ))}
       </main>
     </div>
   );
