@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { useGetAllFreelancersQuery } from "../redux/api";
-import { useClickOutside } from "../hooks/useClickOutside";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 import { FreelancerCard } from "../components/FreelancerCard";
 import styles from "./FreelancerPage.module.scss";
 

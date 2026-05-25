@@ -1,15 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRegisterMutation } from "../redux/api";
 import CloseIcon from "@mui/icons-material/Close";
-import "./Auth.css";
+import styles from "./Auth.module.scss";
 
 interface RegisterPageProps {
   onClose: () => void;
 }
 
 export const RegisterPage = ({ onClose }: RegisterPageProps) => {
-  const [registerUser, { isLoading, error }] = useRegisterMutation();
+  const [registerUser, { isLoading }] = useRegisterMutation();
   const [form, setForm] = useState({ fullName: "", email: "", password: "" });
+  const [status, setStatus] = useState<{
+    type: "error" | "success";
+    text: string;
+  } | null>(null);
+
+  const resetForm = () => {
+    setForm({ fullName: "", email: "", password: "" });
+    setStatus(null);
+  };
+
+  useEffect(() => {
+    resetForm();
+  }, []);
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -17,41 +35,58 @@ export const RegisterPage = ({ onClose }: RegisterPageProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setStatus(null);
+
     try {
       const result = await registerUser(form).unwrap();
+
       if (result.token) {
         localStorage.setItem("token", result.token);
       }
       if (result.user) {
         localStorage.setItem("user", result.user);
       }
-      setForm({ fullName: "", email: "", password: "" });
-      onClose();
+
+      setStatus({ type: "success", text: "Registration successful!" });
+
+      setTimeout(() => {
+        handleClose();
+      }, 1500);
     } catch (err) {
       console.error("Register failed", err);
+      setStatus({
+        type: "error",
+        text: "Registration failed. Please try again.",
+      });
     }
   };
 
   return (
-    <div className="auth-overlay" onClick={onClose}>
+    <div className={styles.authOverlay} onClick={handleClose}>
       <div
-        className="auth-modal-center register-modal"
+        className={`${styles.authModalCenter} ${styles.registerModal}`}
         onClick={(e) => e.stopPropagation()}
       >
-        <button className="close-btn" onClick={onClose}>
+        <button className={styles.closeBtn} onClick={handleClose} type="button">
           <CloseIcon />
         </button>
 
-        <div className="auth-content">
-          <h2 className="auth-title">Join SkillBridge</h2>
+        <div className={styles.authContent}>
+          <h2 className={styles.authTitle}>Join SkillBridge</h2>
 
-          <form onSubmit={handleSubmit}>
-            <div className="input-group">
+          {status && (
+            <div className={`${styles.statusMessage} ${styles[status.type]}`}>
+              {status.text}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} autoComplete="off">
+            <div className={styles.inputGroup}>
               <label>Full Name</label>
               <input
                 type="text"
                 name="fullName"
-                className="fiverr-input"
+                className={styles.fiverrInput}
                 placeholder="Enter your full name"
                 autoComplete="new-password"
                 value={form.fullName}
@@ -60,12 +95,12 @@ export const RegisterPage = ({ onClose }: RegisterPageProps) => {
               />
             </div>
 
-            <div className="input-group">
+            <div className={styles.inputGroup}>
               <label>Email</label>
               <input
                 type="email"
                 name="email"
-                className="fiverr-input"
+                className={styles.fiverrInput}
                 placeholder="Enter your email"
                 autoComplete="new-password"
                 value={form.email}
@@ -74,12 +109,12 @@ export const RegisterPage = ({ onClose }: RegisterPageProps) => {
               />
             </div>
 
-            <div className="input-group">
+            <div className={styles.inputGroup}>
               <label>Password</label>
               <input
                 type="password"
                 name="password"
-                className="fiverr-input"
+                className={styles.fiverrInput}
                 placeholder="Create a password"
                 autoComplete="new-password"
                 value={form.password}
@@ -89,21 +124,15 @@ export const RegisterPage = ({ onClose }: RegisterPageProps) => {
             </div>
 
             <button
-              className="fiverr-submit-btn"
+              className={styles.fiverrSubmitBtn}
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || status?.type === "success"}
             >
               {isLoading ? "Creating account..." : "Continue"}
             </button>
           </form>
 
-          {error && (
-            <p className="auth-error-msg">
-              Registration failed. Please try again.
-            </p>
-          )}
-
-          <p className="auth-footer-text">
+          <p className={styles.authFooterText}>
             By joining, you agree to the SkillBridge Terms of Service.
           </p>
         </div>

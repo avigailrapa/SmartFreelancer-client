@@ -3,6 +3,7 @@ import { useGetAllCategoriesQuery } from "../../category/redux/api";
 import { useBecomeFreelancerMutation } from "../redux/api";
 import { useNavigate } from "react-router-dom";
 import styles from "./BecomeFreelancer.module.scss";
+import type { Category } from "../../../types/category";
 
 export const BecomeFreelancer = () => {
   const navigate = useNavigate();
@@ -17,7 +18,6 @@ export const BecomeFreelancer = () => {
     userName: "",
     bio: "",
     hourlyRate: "",
-    availableHours: "",
     experienceLevel: "Junior",
     imageFile: null as File | null,
     mainCategoryId: null as number | null,
@@ -40,7 +40,7 @@ export const BecomeFreelancer = () => {
   }, [categories, formData.mainCategoryId]);
 
   const availableSkills = useMemo(() => {
-    const skills: any[] = [];
+    const skills: Category[] = [];
     formData.selectedSpecs.forEach((specId) => {
       const spec = availableSpecialties.find((s) => s.categoryId === specId);
       if (spec?.subCategories) skills.push(...spec.subCategories);
@@ -95,7 +95,6 @@ export const BecomeFreelancer = () => {
     data.append("UserName", formData.userName);
     data.append("Bio", formData.bio);
     data.append("HourlyRate", formData.hourlyRate);
-    data.append("AvailableHours", formData.availableHours);
     data.append("ExperienceLevel", formData.experienceLevel);
 
     if (formData.mainCategoryId)
@@ -206,19 +205,7 @@ export const BecomeFreelancer = () => {
                     }
                   />
                 </div>
-                <div className="form-group">
-                  <label>Hours/Week</label>
-                  <input
-                    type="number"
-                    value={formData.availableHours}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        availableHours: e.target.value,
-                      })
-                    }
-                  />
-                </div>
+                <div className="form-group"></div>
               </div>
               <button
                 className={styles.primaryBtn}

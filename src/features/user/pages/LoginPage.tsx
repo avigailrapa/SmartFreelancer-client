@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react"; 
+import { useState, useEffect } from "react";
 import { useLoginMutation } from "../redux/api";
 import CloseIcon from "@mui/icons-material/Close";
-import "./Auth.css";
+import styles from "./Auth.module.scss"; // יבוא מותאם ל-Modules
 
 interface LoginPageProps {
   onClose: () => void;
@@ -57,24 +57,29 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
   };
 
   return (
-    <div className="auth-overlay" onClick={handleClose}>
-      <div className="auth-modal-center" onClick={(e) => e.stopPropagation()}>
-        <button className="close-btn" onClick={handleClose} type="button">
+    <div className={styles.authOverlay} onClick={handleClose}>
+      <div
+        className={styles.authModalCenter}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className={styles.closeBtn} onClick={handleClose} type="button">
           <CloseIcon />
         </button>
 
-        <h2 className="auth-title">Sign in to your account</h2>
+        <h2 className={styles.authTitle}>Sign in to your account</h2>
 
         {status && (
-          <div className={`status-message ${status.type}`}>{status.text}</div>
+          <div className={`${styles.statusMessage} ${styles[status.type]}`}>
+            {status.text}
+          </div>
         )}
 
         <form onSubmit={handleSubmit} autoComplete="off">
-          <div className="input-group">
+          <div className={styles.inputGroup}>
             <label>Email</label>
             <input
               type="email"
-              className="fiverr-input"
+              className={styles.fiverrInput}
               name="email"
               autoComplete="none"
               value={form.email}
@@ -82,11 +87,11 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
               required
             />
           </div>
-          <div className="input-group">
+          <div className={styles.inputGroup}>
             <label>Password</label>
             <input
               type="password"
-              className="fiverr-input"
+              className={styles.fiverrInput}
               name="password"
               autoComplete="new-password"
               value={form.password}
@@ -95,7 +100,7 @@ export const LoginPage = ({ onClose }: LoginPageProps) => {
             />
           </div>
           <button
-            className="fiverr-submit-btn"
+            className={styles.fiverrSubmitBtn}
             type="submit"
             disabled={isLoading || status?.type === "success"}
           >

@@ -1,7 +1,8 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGetAllFreelancersQuery } from "../freelancer/redux/api";
 import { useGetAllCategoriesQuery } from "../category/redux/api";
+import { useClickOutside } from "../../hooks/useClickOutside";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "./HomePage.module.scss";
 
@@ -50,18 +51,7 @@ export const HomePage = () => {
       .slice(0, 4);
   }, [freelancers]);
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchRef.current &&
-        !searchRef.current.contains(event.target as Node)
-      ) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useClickOutside(searchRef, () => setShowSuggestions(false));
 
   return (
     <div className={styles.wrapper}>

@@ -1,9 +1,23 @@
 import { useGetFreelancerJobsQuery } from "../../job/redux/api";
+import { useCompleteJobMutation } from "../../job/redux/api";
 import styles from "./FreelancerJobPage.module.scss";
 
 export const FreelancerJobsPage = () => {
   const { data: jobs, isLoading, isError } = useGetFreelancerJobsQuery();
+  const [completeJob, { isLoading: isUpdating }] = useCompleteJobMutation();
 
+  const handleComplete = async (jobId: number) => {
+    if (
+      window.confirm("Are you sure you want to mark this job as completed?")
+    ) {
+      try {
+        await completeJob(jobId).unwrap();
+        alert("Job marked as completed!");
+      } catch (err) {
+        alert("Failed to update status");
+      }
+    }
+  };
   if (isLoading) {
     return <div className={styles.loading}>Loading...</div>;
   }
@@ -47,6 +61,15 @@ export const FreelancerJobsPage = () => {
 
               <div className={styles.footer}>
                 <span className={styles.price}>${job.maxPayPerHour}/hr</span>
+                {job.status === "InProgress" && (
+                  <button
+                    className={styles.completeBtn}
+                    onClick={() => handleComplete(job.jobId)}
+                    disabled={isUpdating}
+                  >
+                    {isUpdating ? "Updating..." : "Mark as Completed"}
+                  </button>
+                )}
               </div>
             </div>
           ))

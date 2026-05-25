@@ -77,6 +77,15 @@ export const jobApi = createApi({
       query: () => "/freelancer-jobs",
       providesTags: ["Job"],
     }),
+
+    // ---------- COMPLETE----------
+    completeJob: builder.mutation<Job, number>({
+      query: (jobId) => ({
+        url: `/${jobId}/complete`,
+        method: "PUT",
+      }),
+      invalidatesTags: ["Job"],
+    }),
   }),
 });
 
@@ -89,4 +98,5 @@ export const {
   useUpdateJobMutation,
   useDeleteJobMutation,
   useGetFreelancerJobsQuery,
+  useCompleteJobMutation,
 } = jobApi;
