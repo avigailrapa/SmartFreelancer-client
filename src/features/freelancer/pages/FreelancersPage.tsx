@@ -21,7 +21,7 @@ export const FreelancersPage = () => {
   const { data: freelancers, isLoading } = useGetAllFreelancersQuery();
 
   const [searchTerm, setSearchTerm] = useState(initialSearch);
-  const [priceRange, setPriceRange] = useState<[number, number]>([20, 1500]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([10, 1500]);
   const [selectedLevel, setSelectedLevel] = useState<string>("All");
 
   const [isBudgetOpen, setIsBudgetOpen] = useState(false);
@@ -94,7 +94,7 @@ export const FreelancersPage = () => {
 
             <div className={styles.filterWrapper} ref={budgetRef}>
               <button
-                className={`${styles.minimalBtn} ${priceRange[0] > 20 || priceRange[1] < 1500 ? styles.activeFilter : ""}`}
+                className={`${styles.minimalBtn} ${priceRange[0] > 10 || priceRange[1] < 1500 ? styles.activeFilter : ""}`}
                 onClick={() => setIsBudgetOpen(!isBudgetOpen)}
               >
                 Budget ▾
@@ -112,7 +112,7 @@ export const FreelancersPage = () => {
                   </div>
                   <input
                     type="range"
-                    min="20"
+                    min="10"
                     max="1500"
                     step="10"
                     value={priceRange[1]}
@@ -124,7 +124,7 @@ export const FreelancersPage = () => {
                   <div className={styles.budgetActions}>
                     <button
                       className={styles.clearBtnText}
-                      onClick={() => setPriceRange([20, 1500])}
+                      onClick={() => setPriceRange([10, 1500])}
                     >
                       Clear
                     </button>
@@ -140,13 +140,13 @@ export const FreelancersPage = () => {
             </div>
 
             {(selectedLevel !== "All" ||
-              priceRange[0] > 20 ||
+              priceRange[0] > 10 ||
               priceRange[1] < 1500) && (
               <button
                 className={styles.clearAllLink}
                 onClick={() => {
                   setSelectedLevel("All");
-                  setPriceRange([20, 1500]);
+                  setPriceRange([10, 1500]);
                 }}
               >
                 Clear All

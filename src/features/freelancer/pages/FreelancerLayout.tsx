@@ -1,10 +1,8 @@
 import { NavLink, Outlet } from "react-router-dom";
-// מייבאים את הסטייל כאובייקט
 import styles from "./Dashboard.module.scss";
 
 export const FreelancerLayout = () => {
   return (
-    // משתמשים ב-styles.name במקום במחרוזת
     <div className={styles.dashboardWrapper}>
       <nav className={styles.sidebar}>
         <ul className={styles.sidebarNav}>

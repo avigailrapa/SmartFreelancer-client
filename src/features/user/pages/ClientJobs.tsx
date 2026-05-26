@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useGetMyJobsQuery, useDeleteJobMutation } from "../../job/redux/api";
 import { JobProposals } from "../../proposal/components/JobProposals";
-import { AddJobForm } from "../components/AddJobForm";
+import { AddJobForm } from "../../job/components/AddJobForm";
 import styles from "./ClientJobs.module.scss";
 import { RatingForm } from "../../rating/components/ratingForm";
 
@@ -11,7 +11,10 @@ export const ClientJobs = () => {
 
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-  const [ratingTarget, setRatingTarget] = useState<{ jobId: number; freelancerId: number } | null>(null);
+  const [ratingTarget, setRatingTarget] = useState<{
+    jobId: number;
+    freelancerId: number;
+  } | null>(null);
 
   const handleJobAdded = () => {
     setShowAddForm(false);
@@ -28,7 +31,10 @@ export const ClientJobs = () => {
     <div className={styles.myJobsSection}>
       <div className={styles.jobsHeader}>
         <h3>My Jobs</h3>
-        <button className={styles.btnAddJob} onClick={() => setShowAddForm(true)}>
+        <button
+          className={styles.btnAddJob}
+          onClick={() => setShowAddForm(true)}
+        >
           + Add New Job
         </button>
       </div>
@@ -41,7 +47,9 @@ export const ClientJobs = () => {
         <div key={job.jobId} className={styles.jobCard}>
           <div
             className={styles.jobHeader}
-            onClick={() => setExpandedJob(expandedJob === job.jobId ? null : job.jobId)}
+            onClick={() =>
+              setExpandedJob(expandedJob === job.jobId ? null : job.jobId)
+            }
           >
             <h4>{job.title}</h4>
             <div className={styles.jobHeaderActions}>
@@ -75,7 +83,12 @@ export const ClientJobs = () => {
             <div className={styles.ratingSection}>
               <button
                 className={styles.btnOpenRating}
-                onClick={() => setRatingTarget({ jobId: job.jobId, freelancerId: job.assignedFreelancerId! })}
+                onClick={() =>
+                  setRatingTarget({
+                    jobId: job.jobId,
+                    freelancerId: job.assignedFreelancerId!,
+                  })
+                }
               >
                 ⭐ Rate Freelancer
               </button>
@@ -91,7 +104,10 @@ export const ClientJobs = () => {
       ))}
 
       {ratingTarget && (
-        <div className={styles.modalOverlay} onClick={() => setRatingTarget(null)}>
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setRatingTarget(null)}
+        >
           <div onClick={(e) => e.stopPropagation()}>
             <RatingForm
               freelancerId={ratingTarget.freelancerId}

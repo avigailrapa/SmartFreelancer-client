@@ -5,7 +5,7 @@ import { HomePage } from "./features/home/HomePage";
 import { LoginPage } from "./features/user/pages/LoginPage";
 import { RegisterPage } from "./features/user/pages/RegisterPage";
 import { JobsPage } from "./features/job/pages/JobsPage";
-import { FreelancersPage } from "./features/freelancer/pages/FreelancerPage";
+import { FreelancersPage } from "./features/freelancer/pages/FreelancersPage";
 import { FreelancerLayout } from "./features/freelancer/pages/FreelancerLayout";
 import { ProfilePage } from "./features/freelancer/pages/ProfilePage";
 import { OptimizationPage } from "./features/freelancer/pages/OptimizationPage";

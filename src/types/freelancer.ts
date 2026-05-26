@@ -14,7 +14,7 @@ export interface Freelancer {
   userName: string;
   mainCategoryId: number;
   mainCategoryName?: string;
-  arrImage?: Uint8Array;
+  image?: string;
   bio: string;
   availableHours: number;
   availableUntil:string;

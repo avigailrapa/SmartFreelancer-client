@@ -298,17 +298,26 @@ export const BecomeFreelancer = () => {
           {step === 4 && (
             <div className="step-content">
               <h2>Add Specific Skills (Max 15)</h2>
-              <div className={styles.skillsCloud}>
-                {availableSkills.map((skill) => (
-                  <button
-                    key={skill.categoryId}
-                    className={`${styles.skillTag} ${formData.selectedSkills.includes(skill.categoryId) ? styles.active : ""}`}
-                    onClick={() => handleToggleSkill(skill.categoryId)}
-                  >
-                    {skill.name}
-                  </button>
-                ))}
-              </div>
+
+              {availableSkills.length > 0 ? (
+                <div className={styles.skillsCloud}>
+                  {availableSkills.map((skill) => (
+                    <button
+                      key={skill.categoryId}
+                      className={`${styles.skillTag} ${formData.selectedSkills.includes(skill.categoryId) ? styles.active : ""}`}
+                      onClick={() => handleToggleSkill(skill.categoryId)}
+                    >
+                      {skill.name}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <p className={styles.noSkillsMessage}>
+                  No specific skills found for your selected specialties. You're
+                  good to go!
+                </p>
+              )}
+
               <div className={styles.actions}>
                 <button
                   className={styles.secondaryBtn}

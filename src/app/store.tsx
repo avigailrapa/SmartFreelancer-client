@@ -6,6 +6,7 @@ import { jobApi } from "../features/job/redux/api";
 import { categoryApi } from "../features/category/redux/api";
 import { matchingApi } from "../features/matching/redux/api";
 import { proposalApi } from "../features/proposal/redux/api";
+import { ratingApi } from "../features/rating/redux/api";
 export const store = configureStore({
   reducer: {
     [userApi.reducerPath]: userApi.reducer,
@@ -15,6 +16,7 @@ export const store = configureStore({
     [categoryApi.reducerPath]: categoryApi.reducer,
     [matchingApi.reducerPath]: matchingApi.reducer,
     [proposalApi.reducerPath]: proposalApi.reducer,
+    [ratingApi.reducerPath]: ratingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -24,6 +26,7 @@ export const store = configureStore({
       categoryApi.middleware,
       matchingApi.middleware,
       proposalApi.middleware,
+      ratingApi.middleware,
     ),
 });
 
