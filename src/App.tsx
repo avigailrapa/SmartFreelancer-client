@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { NavBar } from "./features/user/components/Navbar";
+import { NavBar } from "./features/home/Navbar";
 import { HomePage } from "./features/home/HomePage";
 import { LoginPage } from "./features/user/pages/LoginPage";
 import { RegisterPage } from "./features/user/pages/RegisterPage";

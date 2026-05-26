@@ -5,7 +5,6 @@ import {
   useGetFreelancerByIdQuery,
   useUpdateFreelancerMutation,
 } from "../redux/api";
-import type { Freelancer } from "../../../types/freelancer";
 import styles from "./Dashboard.module.scss";
 
 export const ProfilePage = () => {
@@ -22,39 +21,58 @@ export const ProfilePage = () => {
   const [updateFreelancer, { isLoading: isUpdating }] =
     useUpdateFreelancerMutation();
   const [isEditing, setIsEditing] = useState(false);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const [formData, setFormData] = useState({
-    userName: "",
     bio: "",
     hourlyRate: 0,
     availableHours: 0,
-    experienceLevel: 0,
+    availableUntil: "",
+    experienceLevel: "",
   });
 
   useEffect(() => {
     if (freelancer) {
       setFormData({
-        userName: freelancer.userName || "",
         bio: freelancer.bio || "",
         hourlyRate: freelancer.hourlyRate || 0,
         availableHours: freelancer.availableHours || 0,
-        experienceLevel: freelancer.experienceLevel || 0,
+        availableUntil: freelancer.availableUntil
+          ? freelancer.availableUntil.split("T")[0]
+          : "",
+        experienceLevel: freelancer.experienceLevel || "",
       });
     }
   }, [freelancer]);
 
-  const handleStartEdit = () => setIsEditing(true);
+  useEffect(() => {
+    if (successMsg) {
+      const timer = setTimeout(() => setSuccessMsg(null), 2500);
+      return () => clearTimeout(timer);
+    }
+  }, [successMsg]);
+
+  const handleStartEdit = () => {
+    setSuccessMsg(null);
+    setErrorMsg(null);
+    setIsEditing(true);
+  };
 
   const handleCancel = () => {
     if (freelancer) {
       setFormData({
-        userName: freelancer.userName,
         bio: freelancer.bio,
         hourlyRate: freelancer.hourlyRate,
         availableHours: freelancer.availableHours,
+        availableUntil: freelancer.availableUntil
+          ? freelancer.availableUntil.split("T")[0]
+          : "",
         experienceLevel: freelancer.experienceLevel,
       });
     }
+    setSuccessMsg(null);
+    setErrorMsg(null);
     setIsEditing(false);
   };
 
@@ -64,10 +82,10 @@ export const ProfilePage = () => {
     >,
   ) => {
     const { name, value } = e.target;
-    const isNumeric = name !== "bio";
+    const numericFields = ["hourlyRate", "availableHours"];
     setFormData((prev) => ({
       ...prev,
-      [name]: isNumeric ? Number(value) : value,
+      [name]: numericFields.includes(name) ? Number(value) : value,
     }));
   };
 
@@ -75,18 +93,26 @@ export const ProfilePage = () => {
     e.preventDefault();
     if (!freelancer) return;
 
-    try {
-      const updatedProfile: Freelancer = {
-        ...freelancer,
-        ...formData,
-      };
+    setSuccessMsg(null);
+    setErrorMsg(null);
 
-      await updateFreelancer(updatedProfile).unwrap();
+    try {
+      await updateFreelancer({
+        ...freelancer,
+        bio: formData.bio,
+        hourlyRate: formData.hourlyRate,
+        experienceLevel: formData.experienceLevel,
+        availableHours: formData.availableHours,
+        availableUntil: formData.availableUntil
+          ? new Date(formData.availableUntil).toISOString()
+          : freelancer.availableUntil,
+        latestRating: undefined,
+      }).unwrap();
+
       setIsEditing(false);
-      alert("Profile updated successfully!");
+      setSuccessMsg("Profile updated successfully!");
     } catch (err: any) {
-      console.error("Failed to update:", err);
-      alert("Update failed. Please try again.");
+      setErrorMsg(err?.data?.detail || "Update failed. Please try again.");
     }
   };
 
@@ -105,26 +131,17 @@ export const ProfilePage = () => {
         </p>
       </div>
 
+      {successMsg && <div className={styles.alertSuccess}>{successMsg}</div>}
+      {errorMsg && <div className={styles.alertError}>{errorMsg}</div>}
+
       <form onSubmit={handleSubmit} className={styles.profileForm}>
         <div className={styles.formGroup}>
           <label>Name</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="userName"
-              className={styles.formControl}
-              value={formData.userName}
-              onChange={handleChange}
-              required
-            />
-          ) : (
-            <p className={styles.displayText}>
-              {freelancer?.userName || "No name set"}
-            </p>
-          )}
+          <p className={styles.displayText}>
+            {freelancer?.userName || "No name set"}
+          </p>
         </div>
 
-        {/* Bio Section */}
         <div className={styles.formGroup}>
           <label>Professional Bio</label>
           {isEditing ? (
@@ -161,7 +178,7 @@ export const ProfilePage = () => {
           </div>
 
           <div className={styles.formGroup}>
-            <label>Weekly Available Hours</label>
+            <label>Available Hours</label>
             {isEditing ? (
               <input
                 type="number"
@@ -180,6 +197,29 @@ export const ProfilePage = () => {
         </div>
 
         <div className={styles.formGroup}>
+          <label>Availability Valid Until</label>
+          {isEditing ? (
+            <input
+              type="date"
+              name="availableUntil"
+              className={styles.formControl}
+              min={new Date().toISOString().split("T")[0]}
+              value={formData.availableUntil}
+              onChange={handleChange}
+              required
+            />
+          ) : (
+            <p className={styles.displayText}>
+              {freelancer?.availableUntil
+                ? new Date(freelancer.availableUntil).toLocaleDateString(
+                    "he-IL",
+                  )
+                : "No date specified"}
+            </p>
+          )}
+        </div>
+
+        <div className={styles.formGroup}>
           <label>Experience Level</label>
           {isEditing ? (
             <select
@@ -188,8 +228,9 @@ export const ProfilePage = () => {
               value={formData.experienceLevel}
               onChange={handleChange}
             >
-              <option value="Beginner">Beginner</option>
-              <option value="Intermediate">Intermediate</option>
+              <option value="Junior">Junior</option>
+              <option value="MidLevel">Mid Level</option>
+              <option value="Senior">Senior</option>
               <option value="Expert">Expert</option>
             </select>
           ) : (
@@ -199,7 +240,6 @@ export const ProfilePage = () => {
           )}
         </div>
 
-        {/* Actions */}
         <div className={styles.actionsFooter}>
           {!isEditing ? (
             <button

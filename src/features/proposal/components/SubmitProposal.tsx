@@ -11,7 +11,8 @@ interface SubmitProposalProps {
 }
 
 export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
-  const user = useSelector((state: RootState) => state.user.user);
+  // מושכים את המשתמש ואת מצב המכירה/קנייה הפעיל מה-Redux
+  const { user, isSellingMode } = useSelector((state: RootState) => state.user);
   const [submitProposal, { isLoading }] = useSubmitProposalMutation();
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -28,6 +29,7 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
     e.preventDefault();
     const newErrors: Record<string, string> = {};
 
+    // ולידציה של השדות בטופס
     if (formData.hourlyRate < 1 || formData.hourlyRate > job.maxPayPerHour)
       newErrors.hourlyRate = `Rate must be between $1 and $${job.maxPayPerHour}`;
     if (formData.estimatedHours < 1)
@@ -39,10 +41,13 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
       setErrors(newErrors);
       return;
     }
-    if (!user?.freelancerId) {
-      alert("You must be a freelancer to submit proposals");
+
+    // 🛑 1. חסימה במידה והמשתמש אינו מחובר, או אינו במצב פרילנסר פעיל (Selling Mode)
+    if (!user || !isSellingMode || !user.freelancerId) {
+      alert("You must be in Freelancer mode to submit proposals");
       return;
     }
+
 
     try {
       await submitProposal({
@@ -54,7 +59,7 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
       alert("Proposal submitted successfully!");
       onClose();
     } catch (err: any) {
-      alert(err?.data?.detail || err?.data?.message || err?.data?.title);
+      alert(err?.data?.detail || err?.data?.message || err?.data?.title || "An error occurred");
     }
   };
 
@@ -250,3 +255,4 @@ export const SubmitProposal = ({ job, onClose }: SubmitProposalProps) => {
     </div>
   );
 };
+

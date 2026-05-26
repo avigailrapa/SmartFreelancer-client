@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../../../app/store";
-import { logout, toggleMode } from "../redux/userSlice";
+import type { RootState } from "../../app/store";
+import { logout, toggleMode } from "../user/redux/userSlice";
 import styles from "./NavBar.module.scss";
 
 interface NavBarProps {

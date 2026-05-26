@@ -17,6 +17,7 @@ export interface Freelancer {
   arrImage?: Uint8Array;
   bio: string;
   availableHours: number;
+  availableUntil:string;
   hourlyRate: number;
   averageStars: number;
   email: string;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useGetOptimalJobsQuery } from "../../matching/redux/api";
 import { SubmitProposal } from "../../proposal/components/SubmitProposal";
 import type { Job } from "../../../types/job";
-import styles from "../../job/pages/JobsPages.module.scss"
+import styles from "../../job/pages/JobsPages.module.scss";
 
 export const OptimizationPage = () => {
   const {
@@ -28,10 +28,7 @@ export const OptimizationPage = () => {
           >
             {isFetching ? (
               <>
-                {/* שימוש ב-template literal למחלקה כפולה */}
-                <span
-                  className={`${styles.spinner} ${styles.spinnerDark}`}
-                />{" "}
+                <span className={`${styles.spinner} ${styles.spinnerDark}`} />{" "}
                 Calculating...
               </>
             ) : (
@@ -66,7 +63,7 @@ export const OptimizationPage = () => {
             const total = job.requiredHours * job.maxPayPerHour;
 
             return (
-              <div key={job.id} className={styles.card}>
+              <div key={job.jobId} className={styles.card}>
                 <div className={styles.cardTop}>
                   <div className={styles.avatar}>
                     {(

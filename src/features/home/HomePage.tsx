@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useGetAllFreelancersQuery } from "../freelancer/redux/api";
 import { useGetAllCategoriesQuery } from "../category/redux/api";
 import { useClickOutside } from "../../hooks/useClickOutside";
+import { FreelancerCard } from "../freelancer/components/FreelancerCard";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "./HomePage.module.scss";
 
@@ -124,31 +125,7 @@ export const HomePage = () => {
           <h2 className={styles.resultsHeading}>Top Rated Professionals</h2>
           <div className={styles.grid}>
             {topFreelancers.map((f) => (
-              <div
-                key={f.freelancerId}
-                className={styles.card}
-                onClick={() => navigate("/freelancers")}
-              >
-                <div className={styles.cardImagePlaceholder}>
-                  {f.userName?.[0]}
-                </div>
-                <div className={styles.cardInfo}>
-                  <div className={styles.sellerName}>{f.userName}</div>
-                  <div>
-                    {f.skillNames?.slice(0, 2).map((s: string) => (
-                      <span key={s} className={styles.tag}>
-                        {s}
-                      </span>
-                    ))}
-                  </div>
-                  <div className={styles.cardFooter}>
-                    <span className={styles.priceValue}>
-                      From ${f.hourlyRate}
-                    </span>
-                    <span>⭐ {f.averageStars?.toFixed(1) || "5.0"}</span>
-                  </div>
-                </div>
-              </div>
+              <FreelancerCard key={f.freelancerId} f={f} />
             ))}
           </div>
         </div>

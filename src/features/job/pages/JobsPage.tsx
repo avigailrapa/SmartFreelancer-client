@@ -8,7 +8,8 @@ import styles from "./JobsPages.module.scss";
 
 export const JobsPage = () => {
   const { data: jobs, isLoading, error } = useGetOpenJobsQuery();
-  const user = useSelector((state: RootState) => state.user.user);
+
+  const { user, isSellingMode } = useSelector((state: RootState) => state.user);
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   if (isLoading)
@@ -65,13 +66,15 @@ export const JobsPage = () => {
                   <span>/hr</span>
                 </span>
               </div>
-              <button
-                className={styles.applyBtn}
-                onClick={() => setSelectedJob(job)}
-                disabled={!user?.freelancerId}
-              >
-                Submit Proposal
-              </button>
+
+              {user && isSellingMode && (
+                <button
+                  className={styles.applyBtn}
+                  onClick={() => setSelectedJob(job)}
+                >
+                  Submit Proposal
+                </button>
+              )}
             </div>
           </div>
         ))}

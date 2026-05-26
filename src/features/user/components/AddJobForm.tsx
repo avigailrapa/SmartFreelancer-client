@@ -211,6 +211,7 @@ export const AddJobForm = ({ onJobAdded, onCancel }: AddJobFormProps) => {
                 value={form.deadline}
                 onChange={handleChange}
                 required
+                min={new Date().toISOString().split("T")[0]}
               />
             </div>
           </div>

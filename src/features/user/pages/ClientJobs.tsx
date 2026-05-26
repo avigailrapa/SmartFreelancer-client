@@ -1,39 +1,17 @@
 import { useState } from "react";
 import { useGetMyJobsQuery, useDeleteJobMutation } from "../../job/redux/api";
-import { useAddRatingMutation } from "../../rating/redux/api";
 import { JobProposals } from "../../proposal/components/JobProposals";
 import { AddJobForm } from "../components/AddJobForm";
 import styles from "./ClientJobs.module.scss";
+import { RatingForm } from "../../rating/components/ratingForm";
 
 export const ClientJobs = () => {
   const { data: myJobs, isLoading, isError, refetch } = useGetMyJobsQuery();
   const [deleteJob] = useDeleteJobMutation();
-  const [addRating] = useAddRatingMutation(); // המוטציה לשליחת דירוג
 
   const [expandedJob, setExpandedJob] = useState<number | null>(null);
   const [showAddForm, setShowAddForm] = useState(false);
-
-  // מצב לניהול הדירוג (באיזו עבודה אנחנו מדרגים כרגע)
-  const [ratingJobId, setRatingJobId] = useState<number | null>(null);
-  const [ratingData, setRatingData] = useState({ stars: 5, comment: "" });
-
-  const handleRatingSubmit = async (freelancerId: number) => {
-    try {
-      await addRating({
-        freelancerId,
-        stars: ratingData.stars,
-        comment: ratingData.comment,
-      }).unwrap();
-
-      alert("Rating submitted successfully!");
-      setRatingJobId(null); 
-      setRatingData({ stars: 5, comment: "" }); 
-    } catch (err) {
-      alert(
-        "Failed to submit rating. Maybe you already rated this freelancer?",
-      );
-    }
-  };
+  const [ratingTarget, setRatingTarget] = useState<{ jobId: number; freelancerId: number } | null>(null);
 
   const handleJobAdded = () => {
     setShowAddForm(false);
@@ -50,11 +28,7 @@ export const ClientJobs = () => {
     <div className={styles.myJobsSection}>
       <div className={styles.jobsHeader}>
         <h3>My Jobs</h3>
-
-        <button
-          className={styles.btnAddJob}
-          onClick={() => setShowAddForm(true)}
-        >
+        <button className={styles.btnAddJob} onClick={() => setShowAddForm(true)}>
           + Add New Job
         </button>
       </div>
@@ -67,17 +41,13 @@ export const ClientJobs = () => {
         <div key={job.jobId} className={styles.jobCard}>
           <div
             className={styles.jobHeader}
-            onClick={() =>
-              setExpandedJob(expandedJob === job.jobId ? null : job.jobId)
-            }
+            onClick={() => setExpandedJob(expandedJob === job.jobId ? null : job.jobId)}
           >
             <h4>{job.title}</h4>
-
             <div className={styles.jobHeaderActions}>
               <span className={styles.expandIcon}>
                 {expandedJob === job.jobId ? "▼" : "▶"}
               </span>
-
               <button
                 className={styles.btnDeleteJob}
                 onClick={(e) => {
@@ -90,63 +60,25 @@ export const ClientJobs = () => {
             </div>
           </div>
 
-          <div className={styles.jobDetails}>
-            <p>{job.description}</p>
-
-            <div className={styles.jobMeta}>
-              <span>Budget: ${job.maxPayPerHour}/hr</span>
-              <span>Status:{job.status}</span>
+          {/* ✨ שינוי מרכזי: הפרטים מוצגים רק בלחיצה (כשכרטיס זה מורחב) ✨ */}
+          {expandedJob === job.jobId && (
+            <div className={styles.jobDetails}>
+              <p>{job.description}</p>
+              <div className={styles.jobMeta}>
+                <span>Budget: ${job.maxPayPerHour}/hr</span>
+                <span>Status: {job.status}</span>
+              </div>
             </div>
-          </div>
+          )}
+
           {job.status === "Completed" && job.assignedFreelancerId && (
             <div className={styles.ratingSection}>
-              {ratingJobId === job.jobId ? (
-                <div className={styles.ratingForm}>
-                  <select
-                    value={ratingData.stars}
-                    onChange={(e) =>
-                      setRatingData({
-                        ...ratingData,
-                        stars: Number(e.target.value),
-                      })
-                    }
-                  >
-                    {[5, 4, 3, 2, 1].map((num) => (
-                      <option key={num} value={num}>
-                        {num} Stars
-                      </option>
-                    ))}
-                  </select>
-                  <textarea
-                    placeholder="Write a comment about the freelancer..."
-                    value={ratingData.comment}
-                    onChange={(e) =>
-                      setRatingData({ ...ratingData, comment: e.target.value })
-                    }
-                  />
-                  <div className={styles.ratingBtns}>
-                    <button
-                      onClick={() => handleRatingSubmit(job.assignedFreelancerId!)}
-                      className={styles.btnSubmitRating}
-                    >
-                      Submit
-                    </button>
-                    <button
-                      onClick={() => setRatingJobId(null)}
-                      className={styles.btnCancel}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <button
-                  className={styles.btnOpenRating}
-                  onClick={() => setRatingJobId(job.jobId)}
-                >
-                  ⭐ Rate Freelancer
-                </button>
-              )}
+              <button
+                className={styles.btnOpenRating}
+                onClick={() => setRatingTarget({ jobId: job.jobId, freelancerId: job.assignedFreelancerId! })}
+              >
+                ⭐ Rate Freelancer
+              </button>
             </div>
           )}
 
@@ -157,6 +89,17 @@ export const ClientJobs = () => {
           )}
         </div>
       ))}
+
+      {ratingTarget && (
+        <div className={styles.modalOverlay} onClick={() => setRatingTarget(null)}>
+          <div onClick={(e) => e.stopPropagation()}>
+            <RatingForm
+              freelancerId={ratingTarget.freelancerId}
+              onClose={() => setRatingTarget(null)}
+            />
+          </div>
+        </div>
+      )}
 
       {showAddForm && (
         <AddJobForm

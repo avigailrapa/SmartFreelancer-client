@@ -1,20 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { jwtDecode } from "jwt-decode";
 import type { Freelancer } from "../../../types/freelancer";
 import { login } from "../../user/redux/userSlice";
-import type { JwtPayload } from "../../../types/jwtPayload";
 import type { AuthResponse } from "../../../types/authRespone";
 
-const getFreelancerIdFromToken = (): number | null => {
-  const token = localStorage.getItem("token");
-  if (!token) return null;
-  try {
-    const decoded = jwtDecode<JwtPayload>(token);
-    return decoded.FreelancerId ? Number(decoded.FreelancerId) : null;
-  } catch {
-    return null;
-  }
-};
+export interface UpdateAvailability {
+  availableHours: number;
+  availableUntil: string;
+}
 
 export const freelancerApi = createApi({
   reducerPath: "freelancerApi",
@@ -82,32 +74,7 @@ export const freelancerApi = createApi({
       },
     }),
 
-    // ---------- DELETE ----------
-    deleteFreelancer: builder.mutation<AuthResponse, void>({
-      query: () => ({ url: "/", method: "DELETE" }),
-      async onQueryStarted(_, { dispatch, queryFulfilled }) {
-        const id = getFreelancerIdFromToken();
-
-        const patchResult = dispatch(
-          freelancerApi.util.updateQueryData(
-            "getAllFreelancers",
-            undefined,
-            (draft) => {
-              return draft.filter((f) => f.freelancerId !== id);
-            },
-          ),
-        );
-
-        try {
-          const { data } = await queryFulfilled;
-          if (data.token && data.user) {
-            dispatch(login({ user: data.user, token: data.token }));
-          }
-        } catch {
-          patchResult.undo();
-        }
-      },
-    }),
+  
   }),
 });
 
@@ -116,5 +83,4 @@ export const {
   useGetFreelancerByIdQuery,
   useBecomeFreelancerMutation,
   useUpdateFreelancerMutation,
-  useDeleteFreelancerMutation,
 } = freelancerApi;
